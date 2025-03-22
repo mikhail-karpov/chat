@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: chat-backend
+  main:
+    banner-mode: off
