@@ -1,0 +1,14 @@
+auth-server:
+  authorization-uri: http://localhost:9090/realms/chat-dev/protocol/openid-connect/auth
+  token-uri: http://localhost:9090/realms/chat-dev/protocol/openid-connect/token
+  user-info-uri: http://localhost:9090/realms/chat-dev/protocol/openid-connect/userinfo
+  jwk-set-uri: http://localhost:9090/realms/chat-dev/protocol/openid-connect/certs
+  client-id: chat-service
+  client-secret: eVbKDmG46txrtU96WTIdlLk9FVZMerto
+
+chat:
+  frontend-url: http://localhost:5173
+
+logging:
+  level:
+    com.mikhailkarpov: debug
