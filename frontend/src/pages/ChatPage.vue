@@ -2,35 +2,35 @@
 
 import {onMounted, ref, useTemplateRef} from "vue";
 import {fetchMessages, postMessage} from "../api/index.js";
+import MessageCard from "../components/MessageCard.vue";
+import {useToast} from "vue-toastification";
 
 const message = ref("");
 const messages = ref([]);
 const scroll = useTemplateRef("scroll");
+const toast = useToast();
 
-function getMessages() {
+onMounted(() => listMessages());
+
+function listMessages() {
   fetchMessages()
   .then(m => messages.value = [...m])
-  .then(() => scrollToEnd())
-  .catch(error => console.error("Failed to get messages", error.message));
+  .then(scrollToEnd)
+  .catch(() => toast.error("Failed to get messages"));
 }
 
 function submitMessage() {
   const text = message.value;
-  if (!text.length) {
-    return;
-  }
   message.value = "";
   postMessage(text)
-  .then(m => messages.value = [...messages.value, m])
+  .then(m => messages.value.push(m))
   .then(() => scrollToEnd())
-  .catch(error => console.error("Failed to send messages", error.message));
+  .catch(() => toast.error("Failed to send message"));
 }
 
 function scrollToEnd() {
-  scroll.value.scrollIntoView({behavior: "smooth"});
+  scroll.value?.scrollIntoView({behavior: "smooth"});
 }
-
-onMounted(() => getMessages());
 
 </script>
 
@@ -38,14 +38,14 @@ onMounted(() => getMessages());
   <div id="chat-container">
     <h1>Chat</h1>
     <div id="messages-container">
-      <div v-for="message in messages" :key="message.id" id="message">
-        {{ message.text }}
+      <div v-for="message in messages" :key="message.id">
+        <MessageCard :message="message"/>
       </div>
-      <div ref="scroll"></div>
+      <span ref="scroll"></span>
     </div>
     <form @submit.prevent="submitMessage" id="send-message-form">
-      <input type="text" v-model.trim="message" placeholder="Your message..."/>
-      <button type="submit" :disabled="message.trim().length === 0">Send</button>
+      <input type="text" v-model.trim="message" placeholder="Your message..." maxlength="128"/>
+      <button type="submit" :disabled="message.length < 3">Send</button>
     </form>
   </div>
 </template>
@@ -55,26 +55,21 @@ onMounted(() => getMessages());
 #chat-container {
   display: flex;
   flex-direction: column;
-  margin: 2rem 5rem;
   height: calc(100vh - 4rem);
-  max-width: 640px;
+  width: 640px;
 }
 
 #messages-container {
+  padding: 1rem;
   margin: 1rem 0;
   display: flex;
   flex-direction: column;
-  flex: 1;
   overflow-y: auto;
   justify-content: safe flex-end;
-  border: 1px solid black;
-}
-
-#message {
-  padding: 0.5rem;
 }
 
 #send-message-form {
+  margin-top: 0.5rem;
   display: flex;
 }
 

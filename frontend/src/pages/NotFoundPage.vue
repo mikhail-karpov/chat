@@ -17,9 +17,6 @@ import {RouterLink} from "vue-router";
 <style scoped>
 
 #not-found-container {
-  display: flex;
-  justify-content: center;
   text-align: center;
-  margin: 10rem 0;
 }
 </style>

@@ -16,7 +16,12 @@ export function login() {
   window.location.href = `${BASE_URL}/oauth2/authorization/auth-server`;
 }
 
-export function fetchMessages(limit = 20) {
+export function fetchUserProfile(userId) {
+  return API.get(`/api/v1/users/${userId}/profile`)
+  .then(response => response.data);
+}
+
+export function fetchMessages(limit = 10) {
   return API.get(`/api/v1/messages?limit=${limit}`)
   .then(response => response.data)
   .then(messages => messages.sort((a, b) =>
