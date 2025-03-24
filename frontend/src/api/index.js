@@ -18,7 +18,10 @@ export function login() {
 
 export function fetchMessages(limit = 20) {
   return API.get(`/api/v1/messages?limit=${limit}`)
-  .then(response => response.data);
+  .then(response => response.data)
+  .then(messages => messages.sort((a, b) =>
+      Date.parse(a.createdAt) - Date.parse(b.createdAt)
+  ));
 }
 
 export function postMessage(text) {
