@@ -1,27 +1,21 @@
 package com.mikhailkarpov.backend.config;
 
-import com.mikhailkarpov.backend.auth.CustomOidcUserService;
 import com.mikhailkarpov.backend.users.UserRepository;
+import com.mikhailkarpov.backend.users.jwt.ChatAuthenticationTokenConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.util.StringUtils;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-  @Value("${chat.frontend-url:}")
-  private String frontendUrl;
 
   @Autowired
   private UserRepository userRepository;
@@ -33,33 +27,19 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/actuator/**").permitAll()
             .anyRequest().authenticated())
-        .cors(Customizer.withDefaults())
+        .cors(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
-        .exceptionHandling(ex ->
-            ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-        .oauth2Client(Customizer.withDefaults())
-        .oauth2Login(login -> login
-            .userInfoEndpoint(userInfoEndpoint ->
-                userInfoEndpoint.oidcUserService(oidcUserService()))
-            .loginPage("/oauth2/authorization/auth-server")
-            .successHandler(authenticationSuccessHandler()))
+        .exceptionHandling(ex -> ex
+            .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+            .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
+        .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
+            jwt.jwtAuthenticationConverter(authenticationTokenConverter())))
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .build();
   }
 
-  @Bean
-  CustomOidcUserService oidcUserService() {
-
-    return new CustomOidcUserService(this.userRepository);
-  }
-
-  @Bean
-  SimpleUrlAuthenticationSuccessHandler authenticationSuccessHandler() {
-
-    String targetUrl = StringUtils.hasText(this.frontendUrl)
-        ? this.frontendUrl
-        : "/";
-
-    return new SimpleUrlAuthenticationSuccessHandler(targetUrl);
+  private ChatAuthenticationTokenConverter authenticationTokenConverter() {
+    return new ChatAuthenticationTokenConverter(this.userRepository);
   }
 
 }

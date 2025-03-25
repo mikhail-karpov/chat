@@ -1,9 +1,9 @@
 package com.mikhailkarpov.backend;
 
+import com.mikhailkarpov.backend.config.IntegrationTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@IntegrationTest
 class ChatApplicationTests {
 
   @Test

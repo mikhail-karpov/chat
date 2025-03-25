@@ -3,28 +3,6 @@ spring:
     name: chat-backend
   main:
     banner-mode: off
-  security:
-    oauth2:
-      client:
-        provider:
-          auth-server:
-            authorization-uri: ${auth-server.authorization-uri}
-            token-uri: ${auth-server.token-uri}
-            user-info-uri: ${auth-server.user-info-uri}
-            jwk-set-uri: ${auth-server.jwk-set-uri}
-            user-name-attribute: ${auth-server.user-name-attribute:sub}
-        registration:
-          auth-server:
-            provider: auth-server
-            client-id: ${auth-server.client-id}
-            client-secret: ${auth-server.client-secret}
-            client-authentication-method: client_secret_basic
-            authorization-grant-type: authorization_code
-            scope:
-              - openid
-              - profile
-              - email
-            redirect-uri: '{baseUrl}/login/oauth2/code/auth-server'
 
 centrifugo:
   url: http://localhost:8000

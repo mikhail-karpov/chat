@@ -6,17 +6,14 @@ import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 
+import com.mikhailkarpov.backend.config.IntegrationTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.wiremock.spring.ConfigureWireMock;
 import org.wiremock.spring.EnableWireMock;
 
-@SpringBootTest(properties = {
-    "centrifugo.url=http://localhost:8000",
-    "centrifugo.api-key=test-api-key",
-})
+@IntegrationTest
 @EnableWireMock({
     @ConfigureWireMock(
         port = 8000
@@ -34,7 +31,7 @@ class CentrifugoClientTest {
   void publishOkResult() {
 
     stubFor(post("/api/publish")
-        .withHeader("X-API-KEY", equalTo("test-api-key"))
+        .withHeader("X-API-KEY", equalTo("7bd5cf56-53bb-4710-8238-7186472819cb"))
         .withRequestBody(matchingJsonPath("channel", equalTo("test-channel")))
         .withRequestBody(matchingJsonPath("data.value", equalTo("test-data")))
         .willReturn(okJson("""

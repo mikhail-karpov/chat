@@ -1,16 +1,13 @@
-auth-server:
-  authorization-uri: http://localhost:9090/realms/chat-dev/protocol/openid-connect/auth
-  token-uri: http://keycloak:8080/realms/chat-dev/protocol/openid-connect/token
-  user-info-uri: http://keycloak:8080/realms/chat-dev/protocol/openid-connect/userinfo
-  jwk-set-uri: http://keycloak:8080/realms/chat-dev/protocol/openid-connect/certs
-  client-id: chat-service
-  client-secret: eVbKDmG46txrtU96WTIdlLk9FVZMerto
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/chat-dev/protocol/openid-connect/certs
 
 centrifugo:
   url: http://centrifugo:8000
-
-chat:
-  frontend-url: http://localhost:5173
+  api-key: 7bd5cf56-53bb-4710-8238-7186472819cb
 
 logging:
   level:
