@@ -1,0 +1,2 @@
+chat-service-uri: http://backend:8080
+centrifugo-uri: ws://centrifugo:8000

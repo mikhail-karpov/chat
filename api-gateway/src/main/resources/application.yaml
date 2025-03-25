@@ -1,0 +1,53 @@
+server:
+  netty:
+    connection-timeout: 2s
+    idle-timeout: 15s
+
+spring:
+  application:
+    name: chat-api-gateway
+  main:
+    banner-mode: off
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 2000
+        response-timeout: 5s
+        pool:
+          max-idle-time: 15s
+          max-life-time: 60s
+      routes:
+        - id: message-service
+          uri: ${chat-service-uri:http://localhost:8081}
+          predicates:
+            - Path=/api/v1/messages/**
+
+        - id: oauth2
+          uri: ${oauth2-service-uri:http://localhost:8081}
+          predicates:
+            - Path=/oauth2/**
+
+        - id: login
+          uri: ${login-service-uri:http://localhost:8081}
+          predicates:
+            - Path=/login/**
+
+        - id: centrifugo
+          uri: ${centrifugo-uri:ws://localhost:8000}
+          predicates:
+            - Path=/api/v1/centrifugo/connection/websocket/**
+          filters:
+            - RewritePath=/api/v1/centrifugo/connection/websocket, /connection/websocket
+
+app:
+  frontend-url: http://localhost:5173
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
