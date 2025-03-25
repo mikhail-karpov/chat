@@ -16,28 +16,32 @@ spring:
         pool:
           max-idle-time: 15s
           max-life-time: 60s
-      routes:
-        - id: message-service
-          uri: ${chat-service-uri:http://localhost:8081}
-          predicates:
-            - Path=/api/v1/messages/**
-
-        - id: oauth2
-          uri: ${oauth2-service-uri:http://localhost:8081}
-          predicates:
-            - Path=/oauth2/**
-
-        - id: login
-          uri: ${login-service-uri:http://localhost:8081}
-          predicates:
-            - Path=/login/**
-
-        - id: centrifugo
-          uri: ${centrifugo-uri:ws://localhost:8000}
-          predicates:
-            - Path=/api/v1/centrifugo/connection/websocket/**
-          filters:
-            - RewritePath=/api/v1/centrifugo/connection/websocket, /connection/websocket
+      default-filters:
+        - TokenRelay=
+        - SaveSession=
+        - RemoveRequestHeader=Cookie
+  security:
+    oauth2:
+      client:
+        provider:
+          auth-server:
+            authorization-uri: ${auth-server.authorization-uri}
+            token-uri: ${auth-server.token-uri}
+            user-info-uri: ${auth-server.user-info-uri}
+            jwk-set-uri: ${auth-server.jwk-set-uri}
+            user-name-attribute: ${auth-server.user-name-attribute:sub}
+        registration:
+          auth-server:
+            provider: auth-server
+            client-id: ${auth-server.client-id}
+            client-secret: ${auth-server.client-secret}
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: authorization_code
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: '{baseUrl}/login/oauth2/code/auth-server'
 
 app:
   frontend-url: http://localhost:5173
