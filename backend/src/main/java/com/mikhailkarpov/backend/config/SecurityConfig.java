@@ -30,7 +30,9 @@ public class SecurityConfig {
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
     return http
-        .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/actuator/**").permitAll()
+            .anyRequest().authenticated())
         .cors(Customizer.withDefaults())
         .csrf(AbstractHttpConfigurer::disable)
         .exceptionHandling(ex ->

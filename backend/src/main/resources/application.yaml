@@ -25,3 +25,13 @@ spring:
               - profile
               - email
             redirect-uri: '{baseUrl}/login/oauth2/code/auth-server'
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
