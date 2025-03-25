@@ -1,0 +1,20 @@
+{
+  "admin": {
+    "password": "password",
+    "secret": "secret",
+    "enabled": true
+  },
+  "client": {
+    "allowed_origins": ["*"],
+    "insecure": true
+  },
+  "health": {
+    "enabled": true
+  },
+  "http_api": {
+    "key": "7bd5cf56-53bb-4710-8238-7186472819cb"
+  },
+  "log": {
+    "level": "debug"
+  }
+}

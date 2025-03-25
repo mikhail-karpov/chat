@@ -6,6 +6,9 @@ auth-server:
   client-id: chat-service
   client-secret: eVbKDmG46txrtU96WTIdlLk9FVZMerto
 
+centrifugo:
+  url: http://centrifugo:8000
+
 chat:
   frontend-url: http://localhost:5173
 

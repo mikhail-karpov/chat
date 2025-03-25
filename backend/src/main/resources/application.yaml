@@ -26,6 +26,12 @@ spring:
               - email
             redirect-uri: '{baseUrl}/login/oauth2/code/auth-server'
 
+centrifugo:
+  url: http://localhost:8000
+  api-key: 7bd5cf56-53bb-4710-8238-7186472819cb
+  connect-timeout: 1s
+  read-timeout: 1s
+
 management:
   endpoint:
     health:

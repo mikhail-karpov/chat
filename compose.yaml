@@ -49,3 +49,12 @@ services:
       - --import-realm
       - --hostname=http://localhost:9090
       - --http-enabled=true
+
+  centrifugo:
+    image: centrifugo/centrifugo:v6.1
+    container_name: centrifugo
+    command: centrifugo -c config.json
+    volumes:
+      - ./centrifugo/config.json:/centrifugo/config.json
+    ports:
+      - '8000:8000'
