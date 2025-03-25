@@ -3,16 +3,16 @@ services:
     build: ./frontend
     container_name: frontend
     depends_on:
-      backend:
+      chat-service:
         condition: service_healthy
     environment:
-      VITE_API_URL: http://backend:8080
+      VITE_API_URL: http://chat-service:8080
     ports:
       - '5173:5173'
 
-  backend:
-    build: ./backend
-    container_name: backend
+  chat-service:
+    build: ./chat-service
+    container_name: chat-service
     depends_on:
       keycloak:
         condition: service_healthy

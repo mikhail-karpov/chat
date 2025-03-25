@@ -1,4 +1,4 @@
 rootProject.name = 'chat'
 
 include 'api-gateway'
-include 'backend'
+include 'chat-service'
