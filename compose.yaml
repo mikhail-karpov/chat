@@ -3,12 +3,31 @@ services:
     build: ./frontend
     container_name: frontend
     depends_on:
-      chat-service:
+      api-gateway:
         condition: service_healthy
-    environment:
-      VITE_API_URL: http://chat-service:8080
     ports:
       - '5173:5173'
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      chat-service:
+        condition: service_healthy
+      centrifugo:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "api-gateway:8080/actuator/health/liveness" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    ports:
+      - '8080:8080'
 
   chat-service:
     build: ./chat-service
@@ -19,13 +38,11 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
     healthcheck:
-      test: [ "CMD", "curl", "-f", "backend:8080/actuator/health/liveness" ]
+      test: [ "CMD", "curl", "-f", "chat-service:8080/actuator/health/liveness" ]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 5s
-    ports:
-      - '8080:8080'
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.4

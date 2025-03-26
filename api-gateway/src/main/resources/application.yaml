@@ -10,16 +10,33 @@ spring:
     banner-mode: off
   cloud:
     gateway:
+      default-filters:
+        - SaveSession=
+        - TokenRelay=
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       httpclient:
         connect-timeout: 2000
         response-timeout: 5s
         pool:
           max-idle-time: 15s
           max-life-time: 60s
-      default-filters:
-        - TokenRelay=
-        - SaveSession=
-        - RemoveRequestHeader=Cookie
+      routes:
+        - id: user-service
+          uri: ${user-service-uri:http://localhost:8081}
+          predicates:
+            - Path=/api/v1/users/**
+
+        - id: message-service
+          uri: ${message-service-uri:http://localhost:8082}
+          predicates:
+            - Path=/api/v1/messages/**
+
+        - id: centrifugo
+          uri: ${centrifugo-uri:ws://localhost:8000}
+          predicates:
+            - Path=/api/v1/centrifugo/connection/websocket/**
+          filters:
+            - RewritePath=/api/v1/centrifugo/connection/websocket, /connection/websocket
   security:
     oauth2:
       client:
