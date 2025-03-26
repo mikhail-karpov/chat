@@ -1,0 +1,37 @@
+# Centrifugo Chat Demo
+
+Demo project showing the capabilities of the Centrifugo. Centrifugo is a scalable messaging server 
+that handles persistent connections over various real-time transports, i.e. WebSocket, SSE, gRPC, etc. 
+Visit https://centrifugal.dev/ to learn more.
+
+## Setup
+
+### Prerequisites
+
+- Java 21
+- Gradle
+- Docker Compose
+
+### Building and Running
+
+```shell
+# Build the project
+./gradlew build
+```
+
+```shell
+# Running containers
+docker compose up --build -d
+```
+
+Once the containers are running, open your browser at http://localhost:5173
+
+Two test users are preconfigured:
+``` 
+username: jamesbond  
+password: password  
+```
+```
+username: johnwayne  
+password: password
+```
