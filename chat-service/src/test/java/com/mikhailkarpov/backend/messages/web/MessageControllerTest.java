@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.mikhailkarpov.backend.config.SecurityTestConfig;
+import com.mikhailkarpov.backend.config.WithMockChatUser;
 import com.mikhailkarpov.backend.messages.Message;
 import com.mikhailkarpov.backend.messages.MessageService;
 import java.util.List;
@@ -18,13 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = MessageController.class)
 @Import(SecurityTestConfig.class)
-@WithMockUser
+@WithMockChatUser
 class MessageControllerTest {
 
   @Autowired
@@ -40,19 +40,19 @@ class MessageControllerTest {
     @Test
     void postMessageOk() throws Exception {
 
-      Message message = new Message("user-id", "test message");
+      Message message = new Message("test-user-id", "test message");
 
-      when(messageService.createMessage("user", "test message"))
+      when(messageService.createMessage("test-user-id", "test message"))
           .thenReturn(message);
 
       mockMvc.perform(post("/api/v1/messages")
               .contentType(MediaType.APPLICATION_JSON)
               .content("""
-                  {"text":  "test message"}
+                  {"text": "test message"}
                   """))
           .andExpect(status().isOk())
           .andExpect(jsonPath("id").value(message.id()))
-          .andExpect(jsonPath("userId").value("user-id"))
+          .andExpect(jsonPath("userId").value("test-user-id"))
           .andExpect(jsonPath("text").value("test message"))
           .andExpect(jsonPath("createdAt").isNotEmpty());
     }

@@ -2,9 +2,10 @@ package com.mikhailkarpov.backend.messages.web;
 
 import com.mikhailkarpov.backend.messages.Message;
 import com.mikhailkarpov.backend.messages.MessageService;
+import com.mikhailkarpov.backend.users.User;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,13 +25,15 @@ public class MessageController {
 
   @PostMapping
   public Message sendMessage(
-      Authentication authentication, @Valid @RequestBody SendMessageRequest request) {
+      @AuthenticationPrincipal User user,
+      @Valid @RequestBody SendMessageRequest request) {
 
-    return messageService.createMessage(authentication.getName(), request.text());
+    return messageService.createMessage(user.id(), request.text());
   }
 
   @GetMapping
-  public List<Message> listMessages(@RequestParam(defaultValue = "10", required = false) int limit) {
+  public List<Message> listMessages(
+      @RequestParam(defaultValue = "10", required = false) int limit) {
 
     return messageService.listMessages(limit);
   }
