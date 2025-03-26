@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {fetchCurrentUser, login} from "../api/index.js";
+import {fetchCurrentUser, login} from "../api/api.js";
 
 export const useAuthStore = defineStore("auth", {
 

@@ -3,7 +3,7 @@
 import {computed} from "vue";
 import {useAuthStore} from "../stores/authStore.js";
 import {useQuery} from "@tanstack/vue-query";
-import {fetchUserProfile} from "../api/index.js";
+import {fetchUserProfile} from "../api/api.js";
 
 const props = defineProps({
   message: {
