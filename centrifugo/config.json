@@ -31,6 +31,12 @@
       "subscribe_proxy_enabled": true
     }
   },
+  "engine": {
+    "type": "redis",
+    "redis": {
+      "address": "redis://centrifugo:centrifugopass@redis:6379"
+    }
+  },
   "health": {
     "enabled": true
   },

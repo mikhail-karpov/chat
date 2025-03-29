@@ -71,6 +71,9 @@ services:
     image: centrifugo/centrifugo:v6.1
     container_name: centrifugo
     command: centrifugo -c config.json
+    depends_on:
+      redis:
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1"]
       interval: 10s
@@ -81,3 +84,19 @@ services:
       - ./centrifugo/config.json:/centrifugo/config.json
     ports:
       - '8000:8000'
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--user", "default", "--pass", "password", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis-data:/data
+
+volumes:
+  redis-data: {}
