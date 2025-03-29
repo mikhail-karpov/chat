@@ -18,6 +18,8 @@ services:
         condition: service_healthy
       centrifugo:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: dev
     healthcheck:
@@ -84,8 +86,6 @@ services:
       start_period: 5s
     volumes:
       - ./centrifugo/config.json:/centrifugo/config.json
-    ports:
-      - '8000:8000'
 
   redis:
     image: redis:7.4-alpine

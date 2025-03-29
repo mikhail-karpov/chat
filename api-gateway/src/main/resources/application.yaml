@@ -37,6 +37,12 @@ spring:
             - Path=/api/v1/centrifugo/connection/websocket/**
           filters:
             - RewritePath=/api/v1/centrifugo/connection/websocket, /connection/websocket
+  data:
+    redis:
+      connect-timeout: 1s
+      timeout: 1s
+      repositories:
+        enabled: false
   security:
     oauth2:
       client:
@@ -59,6 +65,11 @@ spring:
               - profile
               - email
             redirect-uri: '{baseUrl}/login/oauth2/code/auth-server'
+  session:
+    redis:
+      configure-action: none
+      namespace: chat:session
+    timeout: 5m
 
 app:
   frontend-url: http://localhost:5173

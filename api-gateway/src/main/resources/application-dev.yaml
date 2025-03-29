@@ -1,3 +1,10 @@
+spring:
+  data:
+    redis:
+      host: redis
+      username: api-gateway
+      password: api-gateway-pass
+
 auth-server:
   authorization-uri: http://localhost:9090/realms/chat-dev/protocol/openid-connect/auth
   token-uri: http://keycloak:8080/realms/chat-dev/protocol/openid-connect/token
