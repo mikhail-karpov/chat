@@ -1,4 +1,9 @@
 spring:
+  data:
+    redis:
+      host: redis
+      username: chat-service
+      password: chat-service-pass
   security:
     oauth2:
       resourceserver:

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Import;
 @Documented
 @Inherited
 @SpringBootTest
-@Import(SecurityTestConfig.class)
+@Import({SecurityTestConfig.class, TestcontainersConfig.class})
 public @interface IntegrationTest {
 
 }

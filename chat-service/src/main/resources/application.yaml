@@ -3,6 +3,10 @@ spring:
     name: chat-backend
   main:
     banner-mode: off
+  data:
+    redis:
+      connect-timeout: 1s
+      timeout: 1s
 
 centrifugo:
   url: http://localhost:8000

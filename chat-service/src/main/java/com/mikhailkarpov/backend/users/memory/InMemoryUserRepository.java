@@ -5,9 +5,7 @@ import com.mikhailkarpov.backend.users.UserRepository;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class InMemoryUserRepository implements UserRepository {
 
   private final Map<String, User> users;

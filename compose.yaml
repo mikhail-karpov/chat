@@ -35,6 +35,8 @@ services:
     depends_on:
       keycloak:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: dev
     healthcheck:
