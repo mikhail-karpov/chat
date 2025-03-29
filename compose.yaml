@@ -17,7 +17,7 @@ services:
       chat-service:
         condition: service_healthy
       centrifugo:
-        condition: service_started
+        condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: dev
     healthcheck:
@@ -71,6 +71,12 @@ services:
     image: centrifugo/centrifugo:v6.1
     container_name: centrifugo
     command: centrifugo -c config.json
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
     volumes:
       - ./centrifugo/config.json:/centrifugo/config.json
     ports:
