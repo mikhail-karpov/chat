@@ -6,7 +6,30 @@
   },
   "client": {
     "allowed_origins": ["*"],
-    "insecure": true
+    "proxy": {
+      "connect": {
+        "enabled": true,
+        "endpoint": "http://chat-service:8080/api/v1/centrifugo/proxy/connect",
+        "http_headers": [
+          "Authorization"
+        ],
+        "timeout": "1s"
+      }
+    }
+  },
+  "channel": {
+    "proxy": {
+      "subscribe": {
+        "endpoint": "http://chat-service:8080/api/v1/centrifugo/proxy/subscribe",
+        "http_headers": [
+          "Authorization"
+        ],
+        "timeout": "1s"
+      }
+    },
+    "without_namespace": {
+      "subscribe_proxy_enabled": true
+    }
   },
   "health": {
     "enabled": true
