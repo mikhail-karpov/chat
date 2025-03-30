@@ -53,5 +53,8 @@
   },
   "log": {
     "level": "debug"
+  },
+  "prometheus": {
+    "enabled": true
   }
 }
