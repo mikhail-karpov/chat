@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public abstract sealed class AbstractCentrifugoResponse<T>
-    permits CentrifugoConnectResponse, CentrifugoSubscribeResponse {
+    permits CentrifugoConnectResponse, CentrifugoRefreshResponse, CentrifugoSubscribeResponse {
 
   private final T result;
 

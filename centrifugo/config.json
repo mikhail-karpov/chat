@@ -14,6 +14,14 @@
           "Authorization"
         ],
         "timeout": "1s"
+      },
+      "refresh": {
+        "enabled": true,
+        "endpoint": "http://chat-service:8080/api/v1/centrifugo/proxy/refresh",
+        "http_headers": [
+          "Authorization"
+        ],
+        "timeout": "1s"
       }
     }
   },

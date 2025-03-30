@@ -21,7 +21,10 @@ public record CentrifugoProperties(
     Duration connectTimeout,
 
     @NotNull
-    Duration readTimeout
+    Duration readTimeout,
+
+    @NotNull
+    Duration refreshInterval
 ) {
 
 }

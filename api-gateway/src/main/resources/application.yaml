@@ -69,7 +69,7 @@ spring:
     redis:
       configure-action: none
       namespace: chat:session
-    timeout: 5m
+    timeout: 15m
 
 app:
   frontend-url: http://localhost:5173

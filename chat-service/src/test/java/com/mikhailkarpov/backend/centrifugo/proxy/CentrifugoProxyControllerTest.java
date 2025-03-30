@@ -40,13 +40,44 @@ class CentrifugoProxyControllerTest {
                   }
                   """))
           .andExpect(status().isOk())
-          .andExpect(jsonPath("result.user").value("test-user-id"));
+          .andExpect(jsonPath("result.user").value("test-user-id"))
+          .andExpect(jsonPath("result.expire_at").isNumber());
     }
 
     @Test
     void connectBadRequest() throws Exception {
 
       mockMvc.perform(post("/api/v1/centrifugo/proxy/connect"))
+          .andExpect(status().isBadRequest());
+    }
+  }
+
+
+  @Nested
+  class ProxyRefreshTests {
+
+    @Test
+    void refreshAuthorized() throws Exception {
+
+      mockMvc.perform(post("/api/v1/centrifugo/proxy/refresh")
+              .contentType(MediaType.APPLICATION_JSON)
+              .content("""
+                  {
+                    "client": "9336a229-2400-4ebc-8c50-0a643d22e8a0",
+                    "transport": "websocket",
+                    "protocol": "json",
+                    "encoding": "json",
+                    "user": "test-user-id"
+                  }
+                  """))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("result.expire_at").isNumber());
+    }
+
+    @Test
+    void connectBadRequest() throws Exception {
+
+      mockMvc.perform(post("/api/v1/centrifugo/proxy/refresh"))
           .andExpect(status().isBadRequest());
     }
   }

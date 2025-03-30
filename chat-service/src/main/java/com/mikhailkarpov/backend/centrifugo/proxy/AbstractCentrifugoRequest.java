@@ -10,7 +10,7 @@ import lombok.experimental.NonFinal;
 @Value
 @NonFinal
 public abstract sealed class AbstractCentrifugoRequest
-    permits CentrifugoConnectRequest, CentrifugoSubscribeRequest {
+    permits CentrifugoConnectRequest, CentrifugoRefreshRequest, CentrifugoSubscribeRequest {
 
   @NotBlank
   String client;
