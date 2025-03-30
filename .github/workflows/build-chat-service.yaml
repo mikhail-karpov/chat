@@ -2,20 +2,16 @@ name: Build Chat Service
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - ./chat-service
+    branches: [ "main "]
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
     types:
       - opened
       - reopened
       - edited
       - synchronize
     paths:
-      - ./chat-service
+      - 'chat-service/**'
 
 jobs:
   build:
@@ -23,17 +19,18 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: '21'
           distribution: 'temurin'
-          cache: 'gradle'
 
-      - name: Grant execute permission for Gradlew
-        run: chmod +x gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582
+        with:
+          gradle-version: '8.13'
 
-      - name: Build with Gradle
+      - name: Build with Gradle Wrapper
         run: ./gradlew build
