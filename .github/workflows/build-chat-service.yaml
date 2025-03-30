@@ -2,7 +2,7 @@ name: Build Chat Service
 
 on:
   push:
-    branches: [ "main "]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
     types:
@@ -12,6 +12,7 @@ on:
       - synchronize
     paths:
       - 'chat-service/**'
+  workflow_dispatch:
 
 jobs:
   build:
