@@ -31,7 +31,7 @@ public class SecurityConfig {
 
     return http
         .authorizeExchange(auth -> auth
-            .pathMatchers("/actuator/health/**").permitAll()
+            .pathMatchers("/actuator/**").permitAll()
             .anyExchange().authenticated())
         .cors(cors -> cors.configurationSource(configurationSource()))
         .csrf(CsrfSpec::disable)
