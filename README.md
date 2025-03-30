@@ -4,6 +4,8 @@ Demo project showing the capabilities of the Centrifugo. Centrifugo is a scalabl
 that handles persistent connections over various real-time transports, i.e. WebSocket, SSE, gRPC, etc. 
 Visit https://centrifugal.dev/ to learn more.
 
+<img src="./docs/images/chat-architecture.png" alt="Architecture" width="500" height="auto">
+
 ## Setup
 
 ### Prerequisites
