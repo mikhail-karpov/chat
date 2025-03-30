@@ -37,3 +37,26 @@ password: password
 username: johnwayne  
 password: password
 ```
+
+```shell
+# Stop containers
+docker compose down -v
+```
+
+## Monitoring
+
+```shell
+# Running Prometheus and Grafana containers
+docker compose -f compose.monitoring.yaml up -d
+```
+
+Grafana dashboard is available at http://localhost:3000:
+```
+username: admin  
+password: password
+```
+
+```shell
+# Stop Prometheus and Grafana containers
+docker compose -f compose.monitoring.yaml down -v
+```
