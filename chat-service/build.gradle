@@ -47,9 +47,16 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-
 jacoco {
     toolVersion = '0.8.12'
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
 }
 
 jacocoTestCoverageVerification {
@@ -58,7 +65,7 @@ jacocoTestCoverageVerification {
         rule {
             limit {
                 counter = 'LINE'
-                minimum = 0.7
+                minimum = 0.8
             }
         }
     }
