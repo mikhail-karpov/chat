@@ -14,6 +14,10 @@ centrifugo:
   connect-timeout: 1s
   read-timeout: 1s
 
+chat:
+  messages:
+    ttl: 1d
+
 management:
   endpoint:
     health:

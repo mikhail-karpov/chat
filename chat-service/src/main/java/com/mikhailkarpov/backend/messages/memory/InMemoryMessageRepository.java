@@ -5,9 +5,7 @@ import com.mikhailkarpov.backend.messages.MessageRepository;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class InMemoryMessageRepository implements MessageRepository {
 
   private final List<Message> messages;
