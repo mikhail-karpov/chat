@@ -1,10 +1,10 @@
-name: Build Api Gateway
+name: API Gateway CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
     types:
       - opened
       - reopened
@@ -28,10 +28,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@06832c7b30a0129d7fb559bcc6e43d26f6374244
-        with:
-          gradle-version: '8.13'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-      - name: Build with Gradle Wrapper
-        run: ./gradlew build
+      - name: Build and test API Gateway
+        run: ./gradlew :api-gateway:build
+
+      - name: Verify test coverage
+        run: ./gradlew :api-gateway:jacocoTestCoverageVerification

@@ -27,7 +27,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: 'gradle'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -35,16 +34,5 @@ jobs:
       - name: Build and test Chat Service
         run: ./gradlew :chat-service:build
 
-      - name: Generate JaCoCo report
-        run: ./gradlew :chat-service:jacocoTestReport
-
       - name: Verify test coverage
         run: ./gradlew :chat-service:jacocoTestCoverageVerification
-
-      - name: Upload coverage reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: chat-service-coverage-reports
-          path: |
-            chat-service/build/reports/jacoco/test/html
-            chat-service/build/reports/jacoco/test/jacocoTestReport.xml
