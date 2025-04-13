@@ -1,29 +1,21 @@
 import {defineStore} from "pinia";
 import {fetchCurrentUser, login} from "../api/api.js";
+import {computed, ref} from "vue";
 
-export const useAuthStore = defineStore("auth", {
+export const useAuthStore = defineStore("auth", () => {
 
-  state: () => {
-    return {
-      user: undefined
-    }
-  },
+  const user = ref();
 
-  getters: {
-    isAuthenticated: state => {
-      return state.user !== undefined
-    },
-    getUser: state => {
-      return state.user
-    }
-  },
+  const isAuthenticated = computed(() => {
+    return user.value !== undefined;
+  })
 
-  actions: {
-    authenticate() {
+  function authenticate() {
       return fetchCurrentUser()
-      .then(user => this.user = user)
+      .then(u => user.value = u)
       .catch(() => login());
-    }
   }
+
+  return {user, isAuthenticated, authenticate}
 
 });

@@ -1,44 +1,33 @@
 <script setup>
-
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import {fetchMessages, postMessage} from "../api/api.js";
-import MessageCard from "../components/MessageCard.vue";
-import {useToast} from "vue-toastification";
 import {useCentrifuge} from "../api/useCentrifuge.js";
+import MessageCard from "../components/MessageCard.vue";
+import MessageForm from "../components/MessageForm.vue";
 
-const {isConnected, isError, subscribe} = useCentrifuge();
+const {isConnected, subscribe} = useCentrifuge();
 const scroll = ref(null);
-const message = ref("");
 const messages = ref([]);
-const toast = useToast();
 
 onMounted(() => {
   listMessages();
   const subscription = subscribe("chat");
   subscription.on("publication", ctx => {
-    messages.value = [...messages.value, ctx.data];
+    messages.value.push(ctx.data);
   });
-});
-
-watch(isError, () => {
-  if (isError.value) {
-    toast.error("Disconnected");
-  }
 });
 
 function listMessages() {
   fetchMessages()
-  .then(m => messages.value = [...m])
+  .then(m => messages.value = m)
   .then(() => scrollToEnd())
-  .catch(() => toast.error("Failed to get messages"));
+  .catch(() => console.error("Failed to get messages"));
 }
 
-function submitMessage() {
-  const text = message.value;
-  message.value = "";
+function sendMessage(text) {
   postMessage(text)
   .then(() => scrollToEnd())
-  .catch(() => toast.error("Failed to send message"));
+  .catch(() => console.error("Failed to send message"));
 }
 
 function scrollToEnd() {
@@ -48,8 +37,8 @@ function scrollToEnd() {
 </script>
 
 <template>
-  <div v-if="!isConnected || isError" id="chat-container">
-    Connecting...
+  <div v-if="!isConnected">
+    <h1>Connecting...</h1>
   </div>
   <div v-else id="chat-container">
     <h1>Chat</h1>
@@ -59,10 +48,7 @@ function scrollToEnd() {
       </div>
       <span ref="scroll"></span>
     </div>
-    <form @submit.prevent="submitMessage" id="send-message-form">
-      <input type="text" v-model.trim="message" placeholder="Your message..." maxlength="128"/>
-      <button type="submit" :disabled="message.length < 3">Send</button>
-    </form>
+    <MessageForm @send-message="sendMessage"/>
   </div>
 </template>
 
@@ -84,18 +70,4 @@ function scrollToEnd() {
   overflow-y: scroll;
   justify-content: safe flex-end;
 }
-
-#send-message-form {
-  margin-top: 0.5rem;
-  display: flex;
-}
-
-#send-message-form input {
-  flex: 1;
-}
-
-#send-message-form button {
-  margin-left: 1rem;
-}
-
 </style>
