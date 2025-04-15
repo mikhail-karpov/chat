@@ -12,7 +12,7 @@ spring:
       auto-commit: false
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     open-in-view: false
     properties:
       hibernate:
@@ -21,6 +21,9 @@ spring:
         order_inserts: true
         order_updates: true
         connection.provider_disables_autocommit: true
+  liquibase:
+    change-log: "classpath:db/changelog/changelog.xml"
+    contexts: prod
 
 centrifugo:
   url: http://localhost:8000

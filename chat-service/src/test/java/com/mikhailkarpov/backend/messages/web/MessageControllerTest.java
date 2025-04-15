@@ -51,7 +51,7 @@ class MessageControllerTest {
                   {"text": "test message"}
                   """))
           .andExpect(status().isOk())
-          .andExpect(jsonPath("id").value(message.id()))
+          .andExpect(jsonPath("id").isNotEmpty())
           .andExpect(jsonPath("userId").value("test-user-id"))
           .andExpect(jsonPath("text").value("test message"))
           .andExpect(jsonPath("createdAt").isNotEmpty());
