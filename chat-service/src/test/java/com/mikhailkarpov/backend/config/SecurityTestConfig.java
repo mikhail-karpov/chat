@@ -1,6 +1,6 @@
 package com.mikhailkarpov.backend.config;
 
-import com.mikhailkarpov.backend.users.UserRepository;
+import com.mikhailkarpov.backend.users.UserService;
 import com.mikhailkarpov.backend.users.memory.InMemoryUserRepository;
 import org.mockito.Mockito;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -20,8 +20,8 @@ public class SecurityTestConfig {
 
   @Bean
   @ConditionalOnMissingBean
-  public UserRepository userRepository() {
-    return new InMemoryUserRepository();
+  public UserService userRepository() {
+    return new UserService(new InMemoryUserRepository());
   }
 
 }

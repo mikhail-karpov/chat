@@ -7,6 +7,20 @@ spring:
     redis:
       connect-timeout: 1s
       timeout: 1s
+  datasource:
+    hikari:
+      auto-commit: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+        jdbc.batch_size: 15
+        order_inserts: true
+        order_updates: true
+        connection.provider_disables_autocommit: true
 
 centrifugo:
   url: http://localhost:8000
@@ -14,10 +28,6 @@ centrifugo:
   connect-timeout: 1s
   read-timeout: 1s
   refresh-interval: 5m
-
-chat:
-  messages:
-    ttl: 1d
 
 management:
   endpoint:

@@ -5,12 +5,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.mikhailkarpov.backend.config.SecurityTestConfig;
 import com.mikhailkarpov.backend.users.User;
-import com.mikhailkarpov.backend.users.UserRepository;
+import com.mikhailkarpov.backend.users.UserService;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = UserProfileController.class)
@@ -21,13 +24,14 @@ class UserProfileControllerTest {
   @Autowired
   private MockMvc mockMvc;
 
-  @Autowired
-  private UserRepository userRepository;
+  @MockitoBean
+  private UserService userService;
 
   @Test
   void userProfileOk() throws Exception {
 
-    userRepository.save(new User("test-id", "test-username"));
+    Mockito.when(userService.findById("test-id"))
+            .thenReturn(Optional.of(new User("test-id", "test-username")));
 
     mockMvc.perform(get("/api/v1/users/test-id/profile"))
         .andExpect(status().isOk())

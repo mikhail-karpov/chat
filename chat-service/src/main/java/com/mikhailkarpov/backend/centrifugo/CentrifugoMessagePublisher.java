@@ -3,8 +3,8 @@ package com.mikhailkarpov.backend.centrifugo;
 import com.mikhailkarpov.backend.centrifugo.client.CentrifugoClient;
 import com.mikhailkarpov.backend.centrifugo.client.CentrifugoPublishRequest;
 import com.mikhailkarpov.backend.messages.Message;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class CentrifugoMessagePublisher {
@@ -15,7 +15,7 @@ public class CentrifugoMessagePublisher {
     this.client = client;
   }
 
-  @EventListener(Message.class)
+  @TransactionalEventListener(Message.class)
   public void publish(Message message) {
     CentrifugoPublishRequest<Message> request = new CentrifugoPublishRequest<>("chat", message);
     client.publish(request);

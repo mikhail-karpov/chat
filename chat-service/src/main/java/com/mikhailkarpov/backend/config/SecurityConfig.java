@@ -1,6 +1,6 @@
 package com.mikhailkarpov.backend.config;
 
-import com.mikhailkarpov.backend.users.UserRepository;
+import com.mikhailkarpov.backend.users.UserService;
 import com.mikhailkarpov.backend.users.jwt.ChatAuthenticationTokenConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
   @Autowired
-  private UserRepository userRepository;
+  private UserService userService;
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,7 +39,7 @@ public class SecurityConfig {
   }
 
   private ChatAuthenticationTokenConverter authenticationTokenConverter() {
-    return new ChatAuthenticationTokenConverter(this.userRepository);
+    return new ChatAuthenticationTokenConverter(this.userService);
   }
 
 }

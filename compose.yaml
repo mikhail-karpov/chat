@@ -37,6 +37,8 @@ services:
     depends_on:
       keycloak:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
       redis:
         condition: service_healthy
     environment:
@@ -70,6 +72,20 @@ services:
       - --import-realm
       - --hostname=http://localhost:9090
       - --http-enabled=true
+
+  postgres:
+    image: postgres:17.4-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: chat-service
+      POSTGRES_USER: chat-service
+      POSTGRES_PASSWORD: password
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U chat-service -d chat-service'" ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
 
   centrifugo:
     image: centrifugo/centrifugo:v6.1

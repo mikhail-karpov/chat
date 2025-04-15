@@ -4,6 +4,10 @@ spring:
       host: redis
       username: chat-service
       password: chat-service-pass
+  datasource:
+    url: jdbc:postgresql://postgres:5432/chat-service
+    username: chat-service
+    password: password
   security:
     oauth2:
       resourceserver:

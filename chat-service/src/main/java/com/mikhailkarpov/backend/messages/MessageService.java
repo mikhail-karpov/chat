@@ -3,6 +3,7 @@ package com.mikhailkarpov.backend.messages;
 import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MessageService {
@@ -17,6 +18,7 @@ public class MessageService {
     this.eventPublisher = eventPublisher;
   }
 
+  @Transactional
   public Message createMessage(String userId, String text) {
     Message message = new Message(userId, text);
     messageRepository.addMessage(message);
@@ -24,6 +26,7 @@ public class MessageService {
     return message;
   }
 
+  @Transactional(readOnly = true)
   public List<Message> listMessages(int limit) {
     return messageRepository.listMessages(limit);
   }

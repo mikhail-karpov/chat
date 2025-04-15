@@ -7,17 +7,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @IntegrationTest
-class UserRepositoryTest {
+class UserServiceTest {
 
   @Autowired
-  private UserRepository userRepository;
+  private UserService userService;
 
   @Test
   void saveAndFindUser() {
 
     User user = new User("test-id", "test-username");
-    userRepository.save(user);
-    Optional<User> foundUser = userRepository.findById("test-id");
+    userService.save(user);
+    Optional<User> foundUser = userService.findById("test-id");
 
     Assertions.assertThat(foundUser).hasValueSatisfying(it ->
         Assertions.assertThat(it).isEqualTo(user));
