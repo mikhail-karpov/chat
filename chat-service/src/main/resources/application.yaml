@@ -3,10 +3,18 @@ spring:
     name: chat-backend
   main:
     banner-mode: off
+  cache:
+    cache-names: users
+    type: redis
+    redis:
+      key-prefix: 'chat:'
+      time-to-live: 15m
   data:
     redis:
       connect-timeout: 1s
       timeout: 1s
+      repositories:
+        enabled: false
   datasource:
     hikari:
       auto-commit: false

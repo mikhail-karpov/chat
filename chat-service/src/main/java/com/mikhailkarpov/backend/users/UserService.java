@@ -1,6 +1,8 @@
 package com.mikhailkarpov.backend.users;
 
 import java.util.Optional;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,13 +16,15 @@ public class UserService {
   }
 
   @Transactional(readOnly = true)
+  @Cacheable(cacheNames = "users", key = "#userId")
   public Optional<User> findById(String userId) {
     return userRepository.findById(userId);
   }
 
   @Transactional
-  public void save(User user) {
-    userRepository.save(user);
+  @CachePut(cacheNames = "users", key = "#user.id()")
+  public User save(User user) {
+    return userRepository.save(user);
   }
 
 }
