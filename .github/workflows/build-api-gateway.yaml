@@ -4,16 +4,16 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'api-gateway/**'
+#    paths:
+#      - 'api-gateway/**'
   pull_request:
     types:
       - opened
       - reopened
       - edited
       - synchronize
-    paths:
-      - 'api-gateway/**'
+#    paths:
+#      - 'api-gateway/**'
 
 jobs:
   build:
