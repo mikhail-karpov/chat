@@ -2,11 +2,11 @@ name: Chat Service CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
     paths:
       - 'chat-service/**'
   pull_request:
-    branches: [ main ]
     types:
       - opened
       - reopened

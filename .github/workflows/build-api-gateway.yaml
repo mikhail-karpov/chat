@@ -2,11 +2,11 @@ name: API Gateway CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
     paths:
       - 'api-gateway/**'
   pull_request:
-    branches: [ main ]
     types:
       - opened
       - reopened
