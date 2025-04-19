@@ -4,7 +4,7 @@ services:
     container_name: prometheus
     restart: unless-stopped
     volumes:
-      - ./prometheus:/etc/prometheus
+      - ./docker/prometheus:/etc/prometheus
       - prometheus-data:/prometheus
 
   grafana:
@@ -19,8 +19,8 @@ services:
       - "3000:3000"
     restart: unless-stopped
     volumes:
-      - ./grafana/datasources:/etc/grafana/provisioning/datasources
-      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards
 
 volumes:
   prometheus-data: {}
