@@ -15,20 +15,6 @@ spring:
       timeout: 1s
       repositories:
         enabled: false
-  datasource:
-    hikari:
-      auto-commit: false
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    open-in-view: false
-    properties:
-      hibernate:
-        jdbc.time_zone: UTC
-        jdbc.batch_size: 15
-        order_inserts: true
-        order_updates: true
-        connection.provider_disables_autocommit: true
   liquibase:
     change-log: "classpath:db/changelog/changelog.xml"
     contexts: prod
