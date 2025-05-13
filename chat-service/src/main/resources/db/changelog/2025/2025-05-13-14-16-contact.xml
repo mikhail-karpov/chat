@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="2025-05-13-14-16" author="mikhail-karpov" context="prod">
+    <createTable tableName="contact">
+      <column name="conversation_id" type="UUID">
+        <constraints
+          nullable="false"
+          references="conversation(id)"
+          foreignKeyName="contact_conversation_fk"
+        />
+      </column>
+      <column name="user_id" type="VARCHAR">
+        <constraints
+          nullable="false"
+          primaryKey="true"
+          primaryKeyName="contact_pk"
+          references="users(id)"
+          foreignKeyName="contact_owner_user_fk"
+        />
+      </column>
+      <column name="contact_user_id" type="VARCHAR">
+        <constraints
+          nullable="false"
+          primaryKey="true"
+          primaryKeyName="contact_pk"
+          references="users(id)"
+          foreignKeyName="contact_reference_user_fk"
+        />
+      </column>
+      <column name="status" type="VARCHAR(16)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

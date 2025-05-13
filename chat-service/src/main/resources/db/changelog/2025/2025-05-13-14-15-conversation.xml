@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="2025-05-13-14-15" author="mikhail-karpov" context="prod">
+    <createTable tableName="conversation">
+      <column name="id" type="UUID">
+        <constraints
+          nullable="false"
+          primaryKey="true"
+          primaryKeyName="conversation_pk"
+        />
+      </column>
+      <column name="is_public" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_group" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createTable tableName="conversation_participant">
+      <column name="conversation_id" type="UUID">
+        <constraints
+          nullable="false"
+          references="conversation(id)"
+          foreignKeyName="conversation_participant_fk"
+        />
+      </column>
+      <column name="user_id" type="VARCHAR">
+        <constraints
+          nullable="false"
+          references="users(id)"
+          foreignKeyName="conversation_user_fk"
+        />
+      </column>
+      <column name="is_blocked" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addUniqueConstraint
+      tableName="conversation_participant"
+      columnNames="conversation_id,user_id"
+    />
+  </changeSet>
+</databaseChangeLog>
