@@ -3,6 +3,7 @@ package com.mikhailkarpov.backend.centrifugo;
 import com.mikhailkarpov.backend.centrifugo.client.CentrifugoClient;
 import com.mikhailkarpov.backend.centrifugo.client.CentrifugoPublishRequest;
 import com.mikhailkarpov.backend.messages.Message;
+import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,12 @@ class CentrifugoMessagePublisherTest {
   @Test
   void publish(@Captor ArgumentCaptor<CentrifugoPublishRequest<Message>> requestCaptor) {
 
-    Message message = new Message("user", "text");
+    Message message = Message.builder()
+        .conversationId(UUID.randomUUID())
+        .userId("user-id")
+        .text("test message")
+        .build();
+
     centrifugoMessagePublisher.publish(message);
 
     Mockito.verify(centrifugoClient)

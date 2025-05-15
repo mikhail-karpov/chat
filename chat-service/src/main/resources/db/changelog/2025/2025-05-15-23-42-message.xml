@@ -5,10 +5,17 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-  <changeSet id="2025-04-15-23-42" author="mikhail-karpov" context="prod">
+  <changeSet id="2025-05-15-23-42" author="mikhail-karpov" context="prod">
     <createTable tableName="message">
       <column name="id" type="UUID">
         <constraints nullable="false" primaryKey="true" primaryKeyName="message_pk"/>
+      </column>
+      <column name="conversation_id" type="UUID">
+        <constraints
+          nullable="false"
+          references="conversation(id)"
+          foreignKeyName="message_conversation_fk"
+        />
       </column>
       <column name="user_id" type="VARCHAR">
         <constraints nullable="false" references="users(id)" foreignKeyName="users_fk"/>

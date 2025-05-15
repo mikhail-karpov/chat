@@ -2,9 +2,11 @@ package com.mikhailkarpov.backend.messages.web;
 
 import com.mikhailkarpov.backend.messages.Message;
 import com.mikhailkarpov.backend.messages.MessageService;
+import com.mikhailkarpov.backend.messages.SendMessageCommand;
 import com.mikhailkarpov.backend.users.User;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,17 +27,18 @@ public class MessageController {
 
   @PostMapping
   public Message sendMessage(
-      @AuthenticationPrincipal User user,
-      @Valid @RequestBody SendMessageRequest request) {
+      @AuthenticationPrincipal User user, @Valid @RequestBody SendMessageRequest request) {
 
-    return messageService.createMessage(user.id(), request.text());
+    var command = new SendMessageCommand(user.id(), request.conversationId(), request.text());
+    return messageService.sendMessage(command);
   }
 
   @GetMapping
   public List<Message> listMessages(
+      @RequestParam(value = "conversationId") UUID conversationId,
       @RequestParam(defaultValue = "10", required = false) int limit) {
 
-    return messageService.listMessages(limit);
+    return messageService.listMessages(conversationId, limit);
   }
 
 }
