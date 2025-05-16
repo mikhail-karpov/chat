@@ -60,6 +60,14 @@ class ContactServiceTest {
   }
 
   @Test
+  void addYourselfToContactNotAllowed() {
+
+    var command = new AddContactCommand(user1, user1);
+    assertThatThrownBy(() -> contactService.addContact(command))
+        .isInstanceOf(ContactNotAllowedException.class);
+  }
+
+  @Test
   void blockContact() {
 
     contactService.addContact(new AddContactCommand(user1, user2));

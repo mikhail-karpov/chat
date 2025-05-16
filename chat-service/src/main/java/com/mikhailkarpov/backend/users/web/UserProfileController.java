@@ -5,6 +5,7 @@ import com.mikhailkarpov.backend.users.UserService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +23,13 @@ public class UserProfileController {
 
   @GetMapping("/search")
   public ResponseEntity<UserProfileListResponse> searchUsers(
-      @Valid UserSearchRequest request) {
+      @AuthenticationPrincipal User user, @Valid UserSearchRequest request) {
 
-    List<User> users = userService.search(request.query());
+    List<User> users = userService.search(request.query())
+        .stream()
+        .filter(u -> !u.username().equals(user.username()))
+        .toList();
+
     return ResponseEntity.ok(UserProfileListResponse.from(users));
   }
 

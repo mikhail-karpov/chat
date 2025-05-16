@@ -25,6 +25,9 @@ public class ContactService {
 
     var userId = command.user().id();
     var contactUserId = command.contact().id();
+    if (userId.equals(contactUserId)) {
+      throw new ContactNotAllowedException();
+    }
     var contact = contactRepository.findContact(userId, contactUserId).orElse(null);
 
     if (contact == null) {

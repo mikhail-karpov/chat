@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.mikhailkarpov.backend.config.SecurityTestConfig;
+import com.mikhailkarpov.backend.config.WithMockChatUser;
 import com.mikhailkarpov.backend.users.User;
 import com.mikhailkarpov.backend.users.UserService;
 import java.util.List;
@@ -17,13 +18,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = UserProfileController.class)
 @Import(SecurityTestConfig.class)
-@WithMockUser
+@WithMockChatUser
 class UserProfileControllerTest {
 
   @Autowired
