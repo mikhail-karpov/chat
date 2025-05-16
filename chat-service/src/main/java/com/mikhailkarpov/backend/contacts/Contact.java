@@ -25,15 +25,11 @@ public class Contact {
   }
 
   public void approve() {
-    if (status == ContactStatus.BLOCKED) {
-      status = ContactStatus.APPROVED;
-    }
+    status = ContactStatus.APPROVED;
   }
 
   public void block() {
-    if (status == ContactStatus.APPROVED) {
-      status = ContactStatus.BLOCKED;
-    }
+    status = ContactStatus.BLOCKED;
   }
 
   public boolean isApproved() {
