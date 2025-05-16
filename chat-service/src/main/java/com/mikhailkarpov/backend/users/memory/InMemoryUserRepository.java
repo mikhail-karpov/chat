@@ -2,6 +2,7 @@ package com.mikhailkarpov.backend.users.memory;
 
 import com.mikhailkarpov.backend.users.User;
 import com.mikhailkarpov.backend.users.UserRepository;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +25,12 @@ public class InMemoryUserRepository implements UserRepository {
 
     User user = users.get(userId);
     return Optional.ofNullable(user);
+  }
+
+  @Override
+  public List<User> findByUsername(String query) {
+
+    return users.values().stream().filter(u -> u.username().equals(query)).toList();
   }
 
   @Override

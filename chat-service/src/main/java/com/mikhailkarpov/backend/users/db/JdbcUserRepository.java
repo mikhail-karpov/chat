@@ -2,6 +2,7 @@ package com.mikhailkarpov.backend.users.db;
 
 import com.mikhailkarpov.backend.users.User;
 import com.mikhailkarpov.backend.users.UserRepository;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -26,6 +27,20 @@ public class JdbcUserRepository implements UserRepository {
         .param("id", userId)
         .query(User.class)
         .optional();
+  }
+
+  @Override
+  public List<User> findByUsername(String query) {
+
+    return jdbcClient.sql("""
+            SELECT u.id, u.username
+            FROM users u
+            WHERE u.username = :query
+            ORDER BY u.username
+            """)
+        .param("query", query)
+        .query(User.class)
+        .list();
   }
 
   @Override

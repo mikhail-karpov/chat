@@ -2,6 +2,8 @@ package com.mikhailkarpov.backend.users.web;
 
 import com.mikhailkarpov.backend.users.User;
 import com.mikhailkarpov.backend.users.UserService;
+import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,20 +20,22 @@ public class UserProfileController {
     this.userService = userService;
   }
 
+  @GetMapping("/search")
+  public ResponseEntity<UserProfileListResponse> searchUsers(
+      @Valid UserSearchRequest request) {
+
+    List<User> users = userService.search(request.query());
+    return ResponseEntity.ok(UserProfileListResponse.from(users));
+  }
+
   @GetMapping("/{userId}/profile")
   public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable String userId) {
 
     UserProfileResponse profile = userService.findById(userId)
-        .map(UserProfileResponse::of)
+        .map(UserProfileResponse::from)
         .orElse(null);
 
     return ResponseEntity.ofNullable(profile);
   }
 
-  public record UserProfileResponse(String id, String username) {
-
-    public static UserProfileResponse of(User user) {
-      return new UserProfileResponse(user.id(), user.username());
-    }
-  }
 }

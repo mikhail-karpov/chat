@@ -8,8 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.CacheManager;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 @IntegrationTest
+@Transactional
+@Rollback
 class UserServiceTest {
 
   @Autowired
@@ -34,6 +38,18 @@ class UserServiceTest {
     ValueWrapper valueWrapper = usersCache.get("test-id");
     Assertions.assertThat(valueWrapper).isNotNull();
     Assertions.assertThat((User) valueWrapper.get()).isEqualTo(user);
+  }
+
+  @Test
+  void saveAndSearchUsers() {
+
+    User user1 = new User("test-id-1", "test-username-1");
+    User user2 = new User("test-id-2", "test-username-2");
+    userService.save(user1);
+    userService.save(user2);
+
+    Assertions.assertThat(userService.search("test-username-1")).containsExactly(user1);
+    Assertions.assertThat(userService.search("test-username-3")).isEmpty();
   }
 
 }

@@ -1,5 +1,6 @@
 package com.mikhailkarpov.backend.users;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,4 +28,8 @@ public class UserService {
     return userRepository.save(user);
   }
 
+  @Transactional(readOnly = true)
+  public List<User> search(String query) {
+    return userRepository.findByUsername(query);
+  }
 }
