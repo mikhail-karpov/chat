@@ -8,6 +8,8 @@ spring:
     url: jdbc:postgresql://postgres:5432/chat-service
     username: chat-service
     password: password
+  liquibase:
+    contexts: prod, dev
   security:
     oauth2:
       resourceserver:

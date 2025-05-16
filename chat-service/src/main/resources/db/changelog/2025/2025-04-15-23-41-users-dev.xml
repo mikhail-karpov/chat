@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <changeSet id="2025-04-15-23-41" author="mikhail-karpov" context="dev">
+    <sql>
+      INSERT INTO users
+        (id, username)
+      VALUES
+        ('c96c693a-98bb-4121-8b1a-65e82db5826e', 'jamesbond'),
+        ('53583d37-33c9-4141-9c94-3df998b3cddd', 'johnwayne');
+    </sql>
+  </changeSet>
+</databaseChangeLog>
