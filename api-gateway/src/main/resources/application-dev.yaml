@@ -13,6 +13,7 @@ auth-server:
   client-id: chat-service
   client-secret: eVbKDmG46txrtU96WTIdlLk9FVZMerto
 
+contact-service-uri: http://chat-service:8080
 user-service-uri: http://chat-service:8080
 message-service-uri: http://chat-service:8080
 centrifugo-uri: ws://centrifugo:8000
