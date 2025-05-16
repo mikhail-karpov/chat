@@ -28,15 +28,14 @@ docker compose up --build -d
 
 Once the containers are running, open your browser at http://localhost:5173
 
-Two test users are preconfigured:
-``` 
-username: jamesbond  
-password: password  
-```
-```
-username: johnwayne  
-password: password
-```
+Several test users are preconfigured:
+
+| Username  | Password |
+|:----------|:---------|
+| jamesbond | password |
+| johnwayne | password |
+| annasmith | password |
+| chelsea   | password |
 
 ```shell
 # Stop containers

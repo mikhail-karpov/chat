@@ -34,6 +34,40 @@
       "realmRoles": [
         "USER"
       ]
+    },
+    {
+      "id": "df1378e0-c5cf-4b89-b953-ddca33d5ae8c",
+      "username": "annasmith",
+      "enabled": true,
+      "email": "anna@example.com",
+      "firstName": "Anna",
+      "lastName": "Smith",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password"
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
+    },
+    {
+      "id": "383c317c-d79a-409d-ac3e-756f59721fb3",
+      "username": "chelsea",
+      "enabled": true,
+      "email": "chelsea@example.com",
+      "firstName": "Chelsea",
+      "lastName": "K.",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password"
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
     }
   ],
   "realm": "chat-dev",
