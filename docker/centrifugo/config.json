@@ -23,21 +23,20 @@
         ],
         "timeout": "1s"
       }
+    },
+    "subscribe_to_user_personal_channel": {
+      "enabled": true,
+      "personal_channel_namespace": "personal",
+      "single_connection": true
     }
   },
   "channel": {
-    "proxy": {
-      "subscribe": {
-        "endpoint": "http://chat-service:8080/api/v1/centrifugo/proxy/subscribe",
-        "http_headers": [
-          "Authorization"
-        ],
-        "timeout": "1s"
+    "namespaces": [
+      {
+        "name": "personal",
+        "presence": true
       }
-    },
-    "without_namespace": {
-      "subscribe_proxy_enabled": true
-    }
+    ]
   },
   "engine": {
     "type": "redis",
