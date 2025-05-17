@@ -24,4 +24,17 @@ public class CentrifugoClient {
     });
   }
 
+  public <T> void broadcast(CentrifugoBroadcastRequest<T> request) {
+
+    CentrifugoPublishResponse response = restClient.post()
+        .uri("/api/broadcast")
+        .body(request)
+        .retrieve()
+        .body(CentrifugoPublishResponse.class);
+
+    Optional.ofNullable(response).map(CentrifugoPublishResponse::error).ifPresent(error -> {
+      throw new CentrifugoException(error.message(), error.code());
+    });
+  }
+
 }
