@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  font-family: 'Jost', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: var(--p-gray-800);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: small;
+  font-weight: normal;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  margin-left: 1rem;
+}

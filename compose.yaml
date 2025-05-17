@@ -1,7 +1,7 @@
 services:
   frontend:
-    build: ./frontend
-    container_name: frontend
+    build: ./chat-frontend
+    container_name: chat-frontend
     depends_on:
       api-gateway:
         condition: service_healthy
