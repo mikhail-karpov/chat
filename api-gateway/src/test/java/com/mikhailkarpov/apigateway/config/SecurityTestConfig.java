@@ -5,6 +5,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 
 @TestConfiguration
 @Import(SecurityConfig.class)
@@ -14,6 +15,11 @@ public class SecurityTestConfig {
   ReactiveClientRegistrationRepository reactiveClientRegistrationRepository() {
 
     return Mockito.mock(ReactiveClientRegistrationRepository.class);
+  }
+
+  @Bean
+  ReactiveJwtDecoder jwtDecoder() {
+    return Mockito.mock(ReactiveJwtDecoder.class);
   }
 
 }

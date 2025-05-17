@@ -39,6 +39,7 @@ public class SecurityConfig {
         .oauth2Client(Customizer.withDefaults())
         .oauth2Login(login ->
             login.loginPage("/oauth2/authorization/auth-server"))
+        .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
         .build();
   }
 
