@@ -45,10 +45,5 @@ centrifugo-uri: ws://centrifugo:8000
 centrifugo-proxy-uri: http://chat-service:8080
 
 management:
-  tracing:
-    enabled: true
-    sampling:
-      probability: 1.0
-  zipkin:
-    tracing:
-      endpoint: http://zipkin:9411/api/v2/spans
+  tracing.sampling.probability: 1.0
+  zipkin.tracing.endpoint: http://zipkin:9411/api/v2/spans

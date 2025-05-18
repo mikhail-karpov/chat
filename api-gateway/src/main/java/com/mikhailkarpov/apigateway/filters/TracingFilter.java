@@ -4,8 +4,6 @@ import io.micrometer.tracing.Span;
 import io.micrometer.tracing.TraceContext;
 import io.micrometer.tracing.Tracer;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -17,8 +15,6 @@ import reactor.core.publisher.Mono;
 @Component
 public class TracingFilter implements GlobalFilter, Ordered {
 
-  private static final Logger log = LoggerFactory.getLogger(TracingFilter.class);
-
   private final Tracer tracer;
   private final String headerName = "Trace-ID";
 
@@ -28,8 +24,6 @@ public class TracingFilter implements GlobalFilter, Ordered {
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-
-    log.info("Entering tracing filter. Span: {}", tracer.currentSpan());
 
     Optional.ofNullable(tracer.currentSpan())
         .map(Span::context)
