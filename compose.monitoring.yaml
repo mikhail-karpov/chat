@@ -7,6 +7,12 @@ services:
       - ./docker/prometheus:/etc/prometheus
       - prometheus-data:/prometheus
 
+  zipkin:
+    image: openzipkin/zipkin-slim
+    container_name: zipkin
+    ports:
+      - '9411:9411'
+
   grafana:
     image: grafana/grafana:11.6.0
     container_name: grafana

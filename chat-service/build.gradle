@@ -34,6 +34,8 @@ dependencies {
     implementation 'io.lettuce:lettuce-core:6.5.5.RELEASE'
     implementation 'org.apache.httpcomponents.client5:httpclient5'
     implementation 'org.liquibase:liquibase-core'
+    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    implementation 'io.opentelemetry:opentelemetry-exporter-zipkin'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'

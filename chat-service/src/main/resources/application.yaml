@@ -1,6 +1,6 @@
 spring:
   application:
-    name: chat-backend
+    name: chat-service
   main:
     banner-mode: off
   cache:
@@ -35,3 +35,5 @@ management:
     web:
       exposure:
         include: health, prometheus
+  tracing:
+    enabled: false
