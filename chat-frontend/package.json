@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@primeuix/themes": "^1.1.1",
+    "@primeuix/themes": "^1.1.2",
     "axios": "^1.10.0",
     "centrifuge": "^5.3.5",
     "pinia": "^3.0.3",
