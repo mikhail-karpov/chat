@@ -10,43 +10,45 @@ spring:
     banner-mode: off
   cloud:
     gateway:
-      default-filters:
-        - SaveSession=
-        - TokenRelay=
-        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-      httpclient:
-        connect-timeout: 2000
-        response-timeout: 5s
-        pool:
-          max-idle-time: 15s
-          max-life-time: 60s
-      routes:
-        - id: contact-service
-          uri: ${contact-service-uri:http://localhost:8081}
-          predicates:
-            - Path=/api/v1/contacts/**
+      server:
+        webflux:
+          default-filters:
+            - SaveSession=
+            - TokenRelay=
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+          httpclient:
+            connect-timeout: 2000
+            response-timeout: 5s
+            pool:
+              max-idle-time: 15s
+              max-life-time: 60s
+          routes:
+            - id: contact-service
+              uri: ${contact-service-uri:http://localhost:8081}
+              predicates:
+                - Path=/api/v1/contacts/**
 
-        - id: user-service
-          uri: ${user-service-uri:http://localhost:8081}
-          predicates:
-            - Path=/api/v1/users/**
+            - id: user-service
+              uri: ${user-service-uri:http://localhost:8081}
+              predicates:
+                - Path=/api/v1/users/**
 
-        - id: message-service
-          uri: ${message-service-uri:http://localhost:8082}
-          predicates:
-            - Path=/api/v1/messages/**
+            - id: message-service
+              uri: ${message-service-uri:http://localhost:8082}
+              predicates:
+                - Path=/api/v1/messages/**
 
-        - id: centrifugo
-          uri: ${centrifugo-uri:ws://localhost:8000}
-          predicates:
-            - Path=/api/v1/centrifugo/connection/websocket/**
-          filters:
-            - RewritePath=/api/v1/centrifugo/connection/websocket, /connection/websocket
+            - id: centrifugo
+              uri: ${centrifugo-uri:ws://localhost:8000}
+              predicates:
+                - Path=/api/v1/centrifugo/connection/websocket/**
+              filters:
+                - RewritePath=/api/v1/centrifugo/connection/websocket, /connection/websocket
 
-        - id: centrifugo-proxy
-          uri: ${centrifugo-proxy-uri:http://localhost:8080}
-          predicates:
-            - Path=/api/v1/centrifugo/proxy/**
+            - id: centrifugo-proxy
+              uri: ${centrifugo-proxy-uri:http://localhost:8080}
+              predicates:
+                - Path=/api/v1/centrifugo/proxy/**
   data:
     redis:
       connect-timeout: 1s
