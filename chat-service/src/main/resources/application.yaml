@@ -13,9 +13,6 @@ spring:
     redis:
       client-name: chat-service
       client-type: lettuce
-      lettuce:
-        pool:
-          enabled: true
       connect-timeout: 1s
       timeout: 1s
       repositories:
