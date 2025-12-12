@@ -18,12 +18,6 @@ public record CentrifugoProperties(
     String apiKey,
 
     @NotNull
-    Duration connectTimeout,
-
-    @NotNull
-    Duration readTimeout,
-
-    @NotNull
     Duration refreshInterval
 ) {
 

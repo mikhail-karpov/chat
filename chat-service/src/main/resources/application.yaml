@@ -11,10 +11,20 @@ spring:
       time-to-live: 15m
   data:
     redis:
+      client-name: chat-service
+      client-type: lettuce
+      lettuce:
+        pool:
+          enabled: true
       connect-timeout: 1s
       timeout: 1s
       repositories:
         enabled: false
+  http:
+    client:
+      factory: http_components
+      connect-timeout: 5s
+      read-timeout: 5s
   liquibase:
     change-log: "classpath:db/changelog/changelog.xml"
     contexts: prod
@@ -22,8 +32,6 @@ spring:
 centrifugo:
   url: http://localhost:8000
   api-key: 7bd5cf56-53bb-4710-8238-7186472819cb
-  connect-timeout: 1s
-  read-timeout: 1s
   refresh-interval: 5m
 
 management:
