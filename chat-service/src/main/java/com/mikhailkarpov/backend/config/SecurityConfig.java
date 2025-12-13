@@ -17,6 +17,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+  private static final String[] PERMIT_ALL_PATHS = {
+      "/actuator/**",
+      "/v3/api-docs/**",
+      "/swagger-ui.html",
+      "/swagger-ui/**"
+  };
+
   @Autowired
   private UserService userService;
 
@@ -25,7 +32,7 @@ public class SecurityConfig {
 
     return http
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/actuator/**").permitAll()
+            .requestMatchers(PERMIT_ALL_PATHS).permitAll()
             .anyRequest().authenticated())
         .cors(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)

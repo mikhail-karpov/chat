@@ -1,5 +1,6 @@
 package com.mikhailkarpov.backend.contacts.web;
 
+import com.mikhailkarpov.backend.config.OpenApiSecurityScheme;
 import com.mikhailkarpov.backend.contacts.AddContactCommand;
 import com.mikhailkarpov.backend.contacts.BlockContactCommand;
 import com.mikhailkarpov.backend.contacts.ContactListQuery;
@@ -9,6 +10,7 @@ import com.mikhailkarpov.backend.users.User;
 import com.mikhailkarpov.backend.users.UserNotFoundException;
 import com.mikhailkarpov.backend.users.UserService;
 import java.util.EnumSet;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/contacts")
+@OpenApiSecurityScheme
 public class ContactController {
 
   private final ContactService contactService;
@@ -31,7 +34,7 @@ public class ContactController {
 
   @GetMapping
   public ContactListResponse listContacts(
-      @AuthenticationPrincipal User user, ContactListRequest request) {
+      @AuthenticationPrincipal User user, @ParameterObject ContactListRequest request) {
 
     var statuses = CollectionUtils.isEmpty(request.statuses())
         ? EnumSet.of(ContactStatus.APPROVED)

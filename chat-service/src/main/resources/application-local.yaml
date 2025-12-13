@@ -26,3 +26,17 @@ centrifugo:
 logging:
   level:
     com.mikhailkarpov: debug
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    oauth:
+      client-id: chat-service
+      client-secret: eVbKDmG46txrtU96WTIdlLk9FVZMerto
+  oAuthFlow:
+    authorizationUrl: http://localhost:9090/realms/chat-dev/protocol/openid-connect/auth
+    tokenUrl: http://localhost:9090/realms/chat-dev/protocol/openid-connect/token
+  cache:
+    disabled: true

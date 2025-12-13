@@ -1,5 +1,6 @@
 package com.mikhailkarpov.backend.centrifugo.proxy;
 
+import com.mikhailkarpov.backend.config.OpenApiSecurityScheme;
 import com.mikhailkarpov.backend.users.User;
 import jakarta.validation.Valid;
 import java.time.Duration;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/centrifugo/proxy")
+@OpenApiSecurityScheme
 public class CentrifugoProxyController {
 
   private static final Logger log = LoggerFactory.getLogger(CentrifugoProxyController.class);

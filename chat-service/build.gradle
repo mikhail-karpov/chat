@@ -35,6 +35,7 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
     implementation 'io.micrometer:micrometer-tracing-bridge-otel'
     implementation 'io.opentelemetry:opentelemetry-exporter-zipkin'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'

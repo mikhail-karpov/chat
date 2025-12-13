@@ -1,5 +1,6 @@
 package com.mikhailkarpov.backend.messages.web;
 
+import com.mikhailkarpov.backend.config.OpenApiSecurityScheme;
 import com.mikhailkarpov.backend.messages.Message;
 import com.mikhailkarpov.backend.messages.MessageService;
 import com.mikhailkarpov.backend.messages.SendMessageCommand;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/messages")
+@OpenApiSecurityScheme
 public class MessageController {
 
   private final MessageService messageService;
