@@ -1,3 +1,6 @@
+include:
+  - compose.infra.yaml
+
 services:
   frontend:
     build: ./chat-frontend
@@ -49,81 +52,3 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.1.4
-    container_name: keycloak
-    environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: password
-      KC_HEALTH_ENABLED: true
-    healthcheck:
-      test: [ 'CMD-SHELL', '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:9000/health/live' ]
-      interval: 5s
-      timeout: 5s
-      retries: 30
-    ports:
-      - '9090:8080'
-      - '9000:9000'
-    volumes:
-      - ./docker/keycloak/import:/opt/keycloak/data/import
-    command:
-      - start-dev
-      - --import-realm
-      - --hostname=http://localhost:9090
-      - --http-enabled=true
-
-  postgres:
-    image: postgres:17.4-alpine
-    container_name: postgres
-    environment:
-      POSTGRES_DB: chat-service
-      POSTGRES_USER: chat-service
-      POSTGRES_PASSWORD: password
-    healthcheck:
-      test: [ "CMD-SHELL", "sh -c 'pg_isready -U chat-service -d chat-service'" ]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-    shm_size: 128mb
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-
-  centrifugo:
-    image: centrifugo/centrifugo:v6.1
-    container_name: centrifugo
-    command: centrifugo -c config.json
-    depends_on:
-      redis:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1"]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 5s
-    volumes:
-      - ./docker/centrifugo/config.json:/centrifugo/config.json
-    ports:
-      - '8000:8000'
-    ulimits:
-      nofile:
-        soft: 65535
-        hard: 65535
-
-  redis:
-    image: redis:7.4-alpine
-    container_name: redis
-    command: redis-server /usr/local/etc/redis/redis.conf
-    healthcheck:
-      test: [ "CMD", "redis-cli", "--user", "default", "--pass", "password", "ping" ]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-    volumes:
-      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
-      - redis-data:/data
-
-volumes:
-  postgres-data: {}
-  redis-data: {}

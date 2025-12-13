@@ -4,31 +4,6 @@ spring:
       host: redis
       username: api-gateway
       password: api-gateway-pass
-  security:
-    oauth2:
-      client:
-        provider:
-          auth-server:
-            authorization-uri: ${auth-server.authorization-uri}
-            token-uri: ${auth-server.token-uri}
-            user-info-uri: ${auth-server.user-info-uri}
-            jwk-set-uri: ${auth-server.jwk-set-uri}
-            user-name-attribute: ${auth-server.user-name-attribute:sub}
-        registration:
-          auth-server:
-            provider: auth-server
-            client-id: ${auth-server.client-id}
-            client-secret: ${auth-server.client-secret}
-            client-authentication-method: client_secret_basic
-            authorization-grant-type: authorization_code
-            scope:
-              - openid
-              - profile
-              - email
-            redirect-uri: '{baseUrl}/login/oauth2/code/auth-server'
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${spring.security.oauth2.client.provider.auth-server.jwk-set-uri}
 
 auth-server:
   authorization-uri: http://localhost:9090/realms/chat-dev/protocol/openid-connect/auth

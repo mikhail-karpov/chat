@@ -1,4 +1,18 @@
+server:
+  port: 8081
+
 spring:
+  data:
+    redis:
+      host: localhost
+      username: chat-service
+      password: chat-service-pass
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chat-service
+    username: chat-service
+    password: password
+  liquibase:
+    contexts: prod, dev
   security:
     oauth2:
       resourceserver:
