@@ -18,8 +18,9 @@ spring:
       repositories:
         enabled: false
   http:
-    client:
-      factory: http_components
+    clients:
+      imperative:
+        factory: http_components
       connect-timeout: 5s
       read-timeout: 5s
   liquibase:
@@ -41,7 +42,9 @@ management:
       exposure:
         include: health, prometheus
   tracing:
-    enabled: false
+    export:
+      zipkin:
+        enabled: false
 
 springdoc:
   api-docs:

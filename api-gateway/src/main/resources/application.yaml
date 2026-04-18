@@ -83,10 +83,10 @@ spring:
         jwt:
           jwk-set-uri: ${spring.security.oauth2.client.provider.auth-server.jwk-set-uri}
   session:
-    redis:
-      configure-action: none
-      namespace: chat:session
-    timeout: 15m
+    data:
+      redis:
+        configure-action: none
+        namespace: chat:session
 
 app:
   frontend-url: http://localhost:5173
@@ -101,4 +101,6 @@ management:
       exposure:
         include: health, prometheus
   tracing:
-    enabled: false
+    export:
+      zipkin:
+        enabled: false

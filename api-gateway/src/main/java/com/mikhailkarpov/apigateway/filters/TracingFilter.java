@@ -4,7 +4,6 @@ import io.micrometer.tracing.Span;
 import io.micrometer.tracing.TraceContext;
 import io.micrometer.tracing.Tracer;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -18,7 +17,7 @@ public class TracingFilter implements GlobalFilter, Ordered {
   private final Tracer tracer;
   private final String headerName = "Trace-ID";
 
-  public TracingFilter(@Autowired Tracer tracer) {
+  public TracingFilter(Tracer tracer) {
     this.tracer = tracer;
   }
 

@@ -1,12 +1,13 @@
 package com.mikhailkarpov.apigateway.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.security.jackson2.SecurityJackson2Modules;
+import org.springframework.security.jackson.SecurityJacksonModules;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 public class SessionConfiguration implements BeanClassLoaderAware {
@@ -15,14 +16,16 @@ public class SessionConfiguration implements BeanClassLoaderAware {
 
   @Bean
   public RedisSerializer<Object> springSessionDefaultRedisSerializer() {
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.registerModules(SecurityJackson2Modules.getModules(this.loader));
-    return new GenericJackson2JsonRedisSerializer(mapper);
+    return new JacksonJsonRedisSerializer<>(objectMapper(), Object.class);
   }
 
   @Override
-  public void setBeanClassLoader(ClassLoader classLoader) {
+  public void setBeanClassLoader(@NonNull ClassLoader classLoader) {
     this.loader = classLoader;
+  }
+
+  private JsonMapper objectMapper() {
+    return JsonMapper.builder().addModules(SecurityJacksonModules.getModules(this.loader)).build();
   }
 
 }

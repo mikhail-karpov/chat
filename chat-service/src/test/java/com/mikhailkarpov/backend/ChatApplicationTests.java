@@ -4,7 +4,7 @@ import com.mikhailkarpov.backend.config.IntegrationTest;
 import org.junit.jupiter.api.Test;
 
 @IntegrationTest
-class ChatApplicationTests {
+class  ChatApplicationTests {
 
   @Test
   void contextLoads() {
