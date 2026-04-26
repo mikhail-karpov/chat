@@ -10,7 +10,7 @@ Visit https://centrifugal.dev/ to learn more.
 
 ### Prerequisites
 
-- Java 21
+- Java 25
 - Gradle
 - Docker Compose
 

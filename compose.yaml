@@ -2,9 +2,10 @@ include:
   - compose.infra.yaml
 
 services:
-  frontend:
-    build: ./chat-frontend
-    container_name: chat-frontend
+  web-app:
+    build:
+      context: ./web-app
+    container_name: web-app
     depends_on:
       api-gateway:
         condition: service_healthy
