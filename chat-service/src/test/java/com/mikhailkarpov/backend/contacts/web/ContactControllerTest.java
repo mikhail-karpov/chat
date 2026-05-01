@@ -2,7 +2,6 @@ package com.mikhailkarpov.backend.contacts.web;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -14,17 +13,18 @@ import com.mikhailkarpov.backend.config.WithMockChatUser;
 import com.mikhailkarpov.backend.contacts.AddContactCommand;
 import com.mikhailkarpov.backend.contacts.BlockContactCommand;
 import com.mikhailkarpov.backend.contacts.ContactListQuery;
+import com.mikhailkarpov.backend.contacts.ContactNotAllowedException;
+import com.mikhailkarpov.backend.contacts.ContactNotFoundException;
 import com.mikhailkarpov.backend.contacts.ContactService;
 import com.mikhailkarpov.backend.contacts.ContactStatus;
 import com.mikhailkarpov.backend.contacts.ContactView;
-import com.mikhailkarpov.backend.users.User;
-import com.mikhailkarpov.backend.users.UserService;
+import com.mikhailkarpov.backend.users.UserNotFoundException;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -42,9 +42,6 @@ class ContactControllerTest {
   @MockitoBean
   private ContactService contactService;
 
-  @MockitoBean
-  private UserService userService;
-
   @Nested
   class ListContactsTests {
 
@@ -53,11 +50,13 @@ class ContactControllerTest {
             UUID.fromString("de761950-6752-4a71-ad8d-d95ca066837d"),
             "contact-1",
             "username-1",
+            "User 1",
             ContactStatus.APPROVED),
         new ContactView(
             UUID.fromString("62bf87ad-aff7-4476-a6d7-67fd92a5cd5e"),
             "contact-2",
             "username-2",
+            "User 2",
             ContactStatus.PENDING)
     );
 
@@ -76,10 +75,12 @@ class ContactControllerTest {
           .andExpect(jsonPath("contacts[0].conversationId").value("de761950-6752-4a71-ad8d-d95ca066837d"))
           .andExpect(jsonPath("contacts[0].id").value("contact-1"))
           .andExpect(jsonPath("contacts[0].username").value("username-1"))
+          .andExpect(jsonPath("contacts[0].displayName").value("User 1"))
           .andExpect(jsonPath("contacts[0].status").value("APPROVED"))
           .andExpect(jsonPath("contacts[1].conversationId").value("62bf87ad-aff7-4476-a6d7-67fd92a5cd5e"))
           .andExpect(jsonPath("contacts[1].id").value("contact-2"))
           .andExpect(jsonPath("contacts[1].username").value("username-2"))
+          .andExpect(jsonPath("contacts[1].displayName").value("User 2"))
           .andExpect(jsonPath("contacts[1].status").value("PENDING"));
     }
 
@@ -98,6 +99,7 @@ class ContactControllerTest {
           .andExpect(jsonPath("contacts[0].conversationId").value("62bf87ad-aff7-4476-a6d7-67fd92a5cd5e"))
           .andExpect(jsonPath("contacts[0].id").value("contact-2"))
           .andExpect(jsonPath("contacts[0].username").value("username-2"))
+          .andExpect(jsonPath("contacts[0].displayName").value("User 2"))
           .andExpect(jsonPath("contacts[0].status").value("PENDING"));
     }
 
@@ -117,29 +119,39 @@ class ContactControllerTest {
   @Nested
   class AddContactTests {
 
+    private static final String URL = "/api/v1/contacts/contact-user-id";
+
+    private static final AddContactCommand COMMAND =
+        new AddContactCommand("test-user-id", "contact-user-id");
+
     @Test
-    void addContactNotFound() throws Exception {
+    void addContactUserNotFound() throws Exception {
 
-      mockMvc.perform(post("/api/v1/contacts/not-found"))
+      Mockito.doThrow(UserNotFoundException.class)
+          .when(contactService).addContact(COMMAND);
+
+      mockMvc.perform(post(URL))
           .andExpect(status().isNotFound());
+    }
 
-      verifyNoInteractions(contactService);
+    @Test
+    void addContactNotAllowed() throws Exception {
+
+      Mockito.doThrow(ContactNotAllowedException.class)
+          .when(contactService).addContact(COMMAND);
+
+      mockMvc.perform(post(URL))
+          .andExpect(status().isBadRequest());
     }
 
     @Test
     void addContactOk() throws Exception {
 
-      User user = new User("test-user-id", "test-username");
-      User contact = new User("contact-user-id", "contact-username");
-
-      when(userService.findById("contact-user-id"))
-          .thenReturn(Optional.of(contact));
-
-      mockMvc.perform(post("/api/v1/contacts/contact-user-id"))
+      mockMvc.perform(post(URL))
           .andExpect(status().isOk());
 
       verify(contactService)
-          .addContact(new AddContactCommand(user, contact));
+          .addContact(COMMAND);
     }
   }
 
@@ -147,29 +159,29 @@ class ContactControllerTest {
   @Nested
   class BlockContactTests {
 
+    private static final String URL = "/api/v1/contacts/contact-user-id/block";
+
+    private static final BlockContactCommand COMMAND =
+        new BlockContactCommand("test-user-id", "contact-user-id");
+
     @Test
     void blockContactNotFound() throws Exception {
 
-      mockMvc.perform(post("/api/v1/contacts/not-found/block"))
-          .andExpect(status().isNotFound());
+      Mockito.doThrow(ContactNotFoundException.class)
+          .when(contactService).blockContact(COMMAND);
 
-      verifyNoInteractions(contactService);
+      mockMvc.perform(post(URL))
+          .andExpect(status().isNotFound());
     }
 
     @Test
     void blockContactOk() throws Exception {
 
-      User user = new User("test-user-id", "test-username");
-      User contact = new User("contact-user-id", "contact-username");
-
-      when(userService.findById("contact-user-id"))
-          .thenReturn(Optional.of(contact));
-
       mockMvc.perform(post("/api/v1/contacts/contact-user-id/block"))
           .andExpect(status().isOk());
 
       verify(contactService)
-          .blockContact(new BlockContactCommand(user, contact));
+          .blockContact(COMMAND);
     }
   }
 }

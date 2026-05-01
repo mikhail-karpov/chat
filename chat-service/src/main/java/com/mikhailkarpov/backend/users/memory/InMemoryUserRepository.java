@@ -21,6 +21,12 @@ public class InMemoryUserRepository implements UserRepository {
 
 
   @Override
+  public boolean existsById(String userId) {
+
+    return users.containsKey(userId);
+  }
+
+  @Override
   public Optional<User> findById(String userId) {
 
     User user = users.get(userId);

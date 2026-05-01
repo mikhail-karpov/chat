@@ -7,8 +7,6 @@ import com.mikhailkarpov.backend.contacts.ContactListQuery;
 import com.mikhailkarpov.backend.contacts.ContactService;
 import com.mikhailkarpov.backend.contacts.ContactStatus;
 import com.mikhailkarpov.backend.users.User;
-import com.mikhailkarpov.backend.users.UserNotFoundException;
-import com.mikhailkarpov.backend.users.UserService;
 import java.util.EnumSet;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,11 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContactController {
 
   private final ContactService contactService;
-  private final UserService userService;
 
-  public ContactController(ContactService contactService, UserService userService) {
+  public ContactController(ContactService contactService) {
     this.contactService = contactService;
-    this.userService = userService;
   }
 
   @GetMapping
@@ -48,17 +44,13 @@ public class ContactController {
   public void addContact(
       @AuthenticationPrincipal User user, @PathVariable String contactUserId) {
 
-    var contactUser = userService.findById(contactUserId)
-        .orElseThrow(() -> new UserNotFoundException(contactUserId));
-    contactService.addContact(new AddContactCommand(user, contactUser));
+    contactService.addContact(new AddContactCommand(user.id(), contactUserId));
   }
 
   @PostMapping("/{contactUserId}/block")
   public void blockContact(
       @AuthenticationPrincipal User user, @PathVariable String contactUserId) {
 
-    var contact = userService.findById(contactUserId)
-        .orElseThrow(() -> new UserNotFoundException(contactUserId));
-    contactService.blockContact(new BlockContactCommand(user, contact));
+    contactService.blockContact(new BlockContactCommand(user.id(), contactUserId));
   }
 }

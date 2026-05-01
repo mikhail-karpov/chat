@@ -23,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Rollback
 class MessageServiceTest {
 
-  private final User user1 = new User("user-1", "user-1-username");
-  private final User user2 = new User("user-2", "user-2-username");
+  private final User user1 = new User("user-1", "user-1-username", "User 1");
+  private final User user2 = new User("user-2", "user-2-username", "User 2");
 
   @Autowired
   private ApplicationEvents events;

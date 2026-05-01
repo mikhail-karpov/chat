@@ -1,6 +1,8 @@
 package com.mikhailkarpov.backend.contacts;
 
 import com.mikhailkarpov.backend.conversation.ConversationService;
+import com.mikhailkarpov.backend.users.UserNotFoundException;
+import com.mikhailkarpov.backend.users.UserService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,25 +14,32 @@ public class ContactService {
 
   private final ContactRepository contactRepository;
   private final ConversationService conversationService;
+  private final UserService userService;
 
   public ContactService(
-      ContactRepository contactRepository, ConversationService conversationService) {
+      ContactRepository contactRepository,
+      ConversationService conversationService,
+      UserService userService) {
 
     this.contactRepository = contactRepository;
     this.conversationService = conversationService;
+    this.userService = userService;
   }
 
   @Transactional
   public void addContact(AddContactCommand command) {
 
-    var userId = command.user().id();
-    var contactUserId = command.contact().id();
+    var userId = command.userId();
+    var contactUserId = command.contactUserId();
     if (userId.equals(contactUserId)) {
       throw new ContactNotAllowedException();
     }
     var contact = contactRepository.findContact(userId, contactUserId).orElse(null);
 
     if (contact == null) {
+      if (!userService.existsById(contactUserId)) {
+        throw new UserNotFoundException(contactUserId);
+      }
       var conversation = conversationService.createConversation(userId, contactUserId);
 
       contact = Contact.builder()
@@ -64,7 +73,7 @@ public class ContactService {
   public void blockContact(BlockContactCommand command) {
 
     Contact contact = contactRepository
-        .findContact(command.user().id(), command.contact().id())
+        .findContact(command.userId(), command.contactUserId())
         .orElseThrow(ContactNotFoundException::new);
 
     if (contact.isApproved()) {

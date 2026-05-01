@@ -10,8 +10,11 @@
       <column name="id" type="VARCHAR">
         <constraints nullable="false" primaryKey="true" primaryKeyName="users_pk"/>
       </column>
-      <column name="username" type="VARCHAR">
+      <column name="username" type="text">
         <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="display_name" type="text">
+        <constraints nullable="false"/>
       </column>
     </createTable>
   </changeSet>

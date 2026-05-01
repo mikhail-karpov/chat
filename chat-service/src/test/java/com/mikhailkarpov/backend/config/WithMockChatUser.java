@@ -15,9 +15,11 @@ public @interface WithMockChatUser {
 
   String TEST_USER_ID = "test-user-id";
   String TEST_USERNAME = "test-username";
+  String TEST_DISPLAY_NAME = "TEST USER";
 
   String id() default TEST_USER_ID;
 
   String username() default TEST_USERNAME;
 
+  String displayName() default TEST_DISPLAY_NAME;
 }

@@ -5,6 +5,8 @@ import java.util.Optional;
 
 public interface UserRepository {
 
+  boolean existsById(String userId);
+
   Optional<User> findById(String userId);
 
   List<User> findByUsername(String query);

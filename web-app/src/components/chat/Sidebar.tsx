@@ -5,6 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { useAddNewContact as useAddContact, useContacts } from '@/hooks/useContacts'
 import { useUserSearch } from '@/hooks/useUserSearch'
 import { ContactItem } from './ContactItem'
+import { UserDisplay } from './UserDisplay'
 
 function ContactsSkeleton() {
   return (
@@ -141,12 +142,7 @@ export function Sidebar() {
                 key={u.id}
                 className="flex items-center gap-2.5 border-b border-muted px-3.5 py-2.5"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-paper-2 font-sans text-sm font-medium text-ink-2">
-                  {u.username[0].toUpperCase()}
-                </div>
-                <div className="flex-1 truncate text-[13.5px] font-medium leading-tight text-ink">
-                  {u.username}
-                </div>
+                <UserDisplay {...u} />
                 <button
                   onClick={() =>
                     addNewContact.mutate(u.id, {

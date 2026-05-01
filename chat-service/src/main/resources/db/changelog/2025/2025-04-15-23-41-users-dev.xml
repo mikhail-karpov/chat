@@ -8,12 +8,12 @@
   <changeSet id="2025-04-15-23-41" author="mikhail-karpov" context="dev">
     <sql>
       INSERT INTO users
-        (id, username)
+        (id, username, display_name)
       VALUES
-        ('c96c693a-98bb-4121-8b1a-65e82db5826e', 'jamesbond'),
-        ('53583d37-33c9-4141-9c94-3df998b3cddd', 'johnwayne'),
-        ('df1378e0-c5cf-4b89-b953-ddca33d5ae8c', 'annasmith'),
-        ('383c317c-d79a-409d-ac3e-756f59721fb3', 'chelsea');
+        ('c96c693a-98bb-4121-8b1a-65e82db5826e', 'jamesbond', 'James'),
+        ('53583d37-33c9-4141-9c94-3df998b3cddd', 'johnwayne', 'John'),
+        ('df1378e0-c5cf-4b89-b953-ddca33d5ae8c', 'annasmith', 'Anna'),
+        ('383c317c-d79a-409d-ac3e-756f59721fb3', 'chelsea', 'Chelsea');
     </sql>
   </changeSet>
 </databaseChangeLog>

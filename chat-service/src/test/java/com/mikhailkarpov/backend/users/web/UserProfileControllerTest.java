@@ -40,12 +40,13 @@ class UserProfileControllerTest {
     void userProfileOk() throws Exception {
 
       when(userService.findById("test-id"))
-          .thenReturn(Optional.of(new User("test-id", "test-username")));
+          .thenReturn(Optional.of(new User("test-id", "test-username", "First Last")));
 
       mockMvc.perform(get("/api/v1/users/test-id/profile"))
           .andExpect(status().isOk())
           .andExpect(jsonPath("id").value("test-id"))
-          .andExpect(jsonPath("username").value("test-username"));
+          .andExpect(jsonPath("username").value("test-username"))
+          .andExpect(jsonPath("displayName").value("First Last"));
     }
 
     @Test
@@ -64,8 +65,8 @@ class UserProfileControllerTest {
     void searchUsersOk() throws Exception {
 
       when(userService.search("test-user")).thenReturn(List.of(
-          new User("test-id-1", "test-user-1"),
-          new User("test-id-2", "test-user-2")
+          new User("test-id-1", "test-user-1", "First Last"),
+          new User("test-id-2", "test-user-2", "Second Last")
       ));
 
       mockMvc.perform(get("/api/v1/users/search?query=test-user"))
@@ -73,8 +74,10 @@ class UserProfileControllerTest {
           .andExpect(jsonPath("$.users.length()").value(2))
           .andExpect(jsonPath("users[0].id").value("test-id-1"))
           .andExpect(jsonPath("users[0].username").value("test-user-1"))
+          .andExpect(jsonPath("users[0].displayName").value("First Last"))
           .andExpect(jsonPath("users[1].id").value("test-id-2"))
-          .andExpect(jsonPath("users[1].username").value("test-user-2"));
+          .andExpect(jsonPath("users[1].username").value("test-user-2"))
+          .andExpect(jsonPath("users[1].displayName").value("Second Last"));
     }
 
     @ParameterizedTest

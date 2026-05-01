@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
 import type { Contact } from '@/types/chat'
+import { UserDisplay } from './UserDisplay'
 
 interface Props {
   contact: Contact
@@ -17,21 +18,7 @@ export function ContactItem({ contact, active, onClick }: Props) {
         active ? 'border-l-[3px] border-l-accent bg-paper-2 pl-[11px]' : 'hover:bg-paper-2',
       )}
     >
-      {/* Avatar */}
-      <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-paper-2 font-sans text-sm font-medium text-ink-2">
-        {contact.username[0]}
-        <span
-          className={cn(
-            'absolute -bottom-px -right-px h-2.5 w-2.5 rounded-full border-[1.5px] border-paper',
-            contact.online ? 'bg-online' : 'bg-ink-3',
-          )}
-        />
-      </div>
-
-      {/* Name */}
-      <div className="truncate text-[13.5px] font-medium leading-tight text-ink">
-        {contact.username}
-      </div>
+      <UserDisplay {...contact} />
 
       {/* Unread */}
       <div className="flex flex-col items-end gap-1">
