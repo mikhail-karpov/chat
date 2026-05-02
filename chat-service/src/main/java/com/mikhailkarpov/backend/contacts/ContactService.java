@@ -37,22 +37,25 @@ public class ContactService {
     var contact = contactRepository.findContact(userId, contactUserId).orElse(null);
 
     if (contact == null) {
-      if (!userService.existsById(contactUserId)) {
-        throw new UserNotFoundException(contactUserId);
-      }
+      var user = userService.findById(userId)
+          .orElseThrow(() -> new UserNotFoundException(userId));
+
+      var contactUser = userService.findById(contactUserId)
+          .orElseThrow(() -> new UserNotFoundException(contactUserId));
+
       var conversation = conversationService.createConversation(userId, contactUserId);
 
       contact = Contact.builder()
           .conversationId(conversation.getId())
           .userId(userId)
-          .contactUserId(contactUserId)
+          .contactUser(contactUser)
           .status(ContactStatus.APPROVED)
           .build();
 
       var reverseContact = Contact.builder()
           .conversationId(conversation.getId())
           .userId(contactUserId)
-          .contactUserId(userId)
+          .contactUser(user)
           .status(ContactStatus.PENDING)
           .build();
 
@@ -70,23 +73,47 @@ public class ContactService {
   }
 
   @Transactional
-  public void blockContact(BlockContactCommand command) {
+  public void editContact(EditContactCommand command) {
 
-    Contact contact = contactRepository
-        .findContact(command.userId(), command.contactUserId())
+    var contact = contactRepository.findContact(command.userId(), command.contactUserId())
         .orElseThrow(ContactNotFoundException::new);
 
-    if (contact.isApproved()) {
-      contact.block();
+    boolean needsUpdate = false;
+
+    if (command.contactDisplayName() != null &&
+        !command.contactDisplayName().equals(contact.getContactDisplayName())) {
+      needsUpdate = true;
+      contact.updateDisplayName(command.contactDisplayName());
+    }
+
+    if (command.contactStatus() != null &&
+        command.contactStatus() != contact.getStatus()) {
+      needsUpdate = true;
+      if (command.contactStatus() == ContactStatus.APPROVED) {
+        contact.approve();
+        conversationService.unblockParticipant(contact.getConversationId(), contact.getContactUserId());
+      }
+      if (command.contactStatus() == ContactStatus.BLOCKED) {
+        contact.block();
+        conversationService.blockParticipant(contact.getConversationId(), contact.getContactUserId());
+      }
+    }
+
+    if (needsUpdate) {
       contactRepository.updateContact(contact);
-      conversationService.blockParticipant(contact.getConversationId(), contact.getContactUserId());
-      log.debug("Contact blocked: {}", contact);
+      log.debug("Contact updated: {}", contact);
     }
   }
 
-  public List<ContactView> listContacts(ContactListQuery query) {
+  public List<Contact> listContacts(ContactListQuery query) {
 
     return contactRepository.findContacts(query.userId(), query.statuses());
   }
 
+  @Transactional(readOnly = true)
+  public Contact getContact(String userId, String contactUserId) {
+
+    return contactRepository.findContact(userId, contactUserId)
+        .orElseThrow(ContactNotFoundException::new);
+  }
 }

@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Rollback
 class ContactServiceTest {
 
-  private final User user1 = new User("user-1", "username-1", "Test");
-  private final User user2 = new User("user-2", "username-2", "Test");
-  private final User user3 = new User("user-3", "username-3", "Test");
+  private final User user1 = new User("user-1", "username-1", "Test 1");
+  private final User user2 = new User("user-2", "username-2", "Test 2");
+  private final User user3 = new User("user-3", "username-3", "Test 3");
 
   @Autowired
   private UserService userService;
@@ -44,7 +44,7 @@ class ContactServiceTest {
     var query = new ContactListQuery(user1.id(), EnumSet.allOf(ContactStatus.class));
     assertThat(contactService.listContacts(query))
         .hasSize(2)
-        .map(ContactView::username)
+        .map(Contact::getContactUsername)
         .containsExactlyInAnyOrder("username-2", "username-3");
   }
 
@@ -53,11 +53,11 @@ class ContactServiceTest {
 
     contactService.addContact(new AddContactCommand("user-1", "user-2"));
 
-    var query = new ContactListQuery(user2.id(), EnumSet.of(ContactStatus.PENDING));
-    assertThat(contactService.listContacts(query))
-        .hasSize(1)
-        .map(ContactView::username)
-        .containsExactlyInAnyOrder("username-1");
+    assertThat(contactService.getContact("user-2", "user-1"))
+        .returns("user-1", Contact::getContactUserId)
+        .returns("Test 1", Contact::getContactDisplayName)
+        .returns(ContactStatus.PENDING, Contact::getStatus)
+        .matches(contact -> contact.getConversationId() != null);
   }
 
   @Test
@@ -80,16 +80,45 @@ class ContactServiceTest {
   void blockContact() {
 
     contactService.addContact(new AddContactCommand("user-1", "user-2"));
-    contactService.blockContact(new BlockContactCommand("user-1", "user-2"));
+    contactService.editContact(new EditContactCommand("user-1", "user-2", null, ContactStatus.BLOCKED));
 
-    var query = new ContactListQuery(user1.id(), EnumSet.of(ContactStatus.APPROVED));
-    assertThat(contactService.listContacts(query)).isEmpty();
+    assertThat(contactService.getContact("user-1", "user-2"))
+      .returns(ContactStatus.BLOCKED, Contact::getStatus);
   }
 
   @Test
   void blockContactNotFound() {
 
-    assertThatThrownBy(() -> contactService.blockContact(new BlockContactCommand("user-1", "user-2")))
+    var command = new EditContactCommand("user-1", "user-2", null, ContactStatus.BLOCKED);
+
+    assertThatThrownBy(() -> contactService.editContact(command))
         .isInstanceOf(ContactNotFoundException.class);
+  }
+
+  @Test
+  void unblockContact() {
+
+    contactService.addContact(new AddContactCommand("user-1", "user-2"));
+    contactService.editContact(new EditContactCommand("user-1", "user-2", null, ContactStatus.BLOCKED));
+    contactService.editContact(new EditContactCommand("user-1", "user-2", null, ContactStatus.APPROVED));
+
+    var query = new ContactListQuery(user1.id(), EnumSet.of(ContactStatus.APPROVED));
+    assertThat(contactService.listContacts(query))
+        .hasSize(1)
+        .map(Contact::getContactUserId)
+        .containsExactlyInAnyOrder("user-2");
+  }
+
+  @Test
+  void editContactDisplayName() {
+
+    contactService.addContact(new AddContactCommand("user-1", "user-2"));
+    contactService.editContact(new EditContactCommand("user-1", "user-2", "Test User", null));
+
+    var query = new ContactListQuery(user1.id(), EnumSet.of(ContactStatus.APPROVED));
+    assertThat(contactService.listContacts(query))
+        .hasSize(1)
+        .map(Contact::getContactDisplayName)
+        .containsExactlyInAnyOrder("Test User");
   }
 }

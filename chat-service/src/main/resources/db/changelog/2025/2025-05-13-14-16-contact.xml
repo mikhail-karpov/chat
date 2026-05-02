@@ -3,7 +3,7 @@
   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
   <changeSet id="2025-05-13-14-16" author="mikhail-karpov" context="prod">
     <createTable tableName="contact">
@@ -14,7 +14,7 @@
           foreignKeyName="contact_conversation_fk"
         />
       </column>
-      <column name="user_id" type="VARCHAR">
+      <column name="user_id" type="text">
         <constraints
           nullable="false"
           primaryKey="true"
@@ -32,7 +32,13 @@
           foreignKeyName="contact_reference_user_fk"
         />
       </column>
-      <column name="status" type="VARCHAR(16)">
+      <column name="contact_username" type="text">
+        <constraints nullable="false" />
+      </column>
+      <column name="contact_display_name" type="text">
+        <constraints nullable="false" />
+      </column>
+      <column name="status" type="text">
         <constraints nullable="false"/>
       </column>
     </createTable>
