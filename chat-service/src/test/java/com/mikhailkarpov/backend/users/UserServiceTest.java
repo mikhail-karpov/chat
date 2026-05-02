@@ -25,7 +25,7 @@ class UserServiceTest {
   @Test
   void saveAndFindUser() {
 
-    User user = new User("test-id", "test-username");
+    User user = new User("test-id", "test-username", "First Last");
     userService.save(user);
     Optional<User> foundUser = userService.findById("test-id");
 
@@ -43,8 +43,8 @@ class UserServiceTest {
   @Test
   void saveAndSearchUsers() {
 
-    User user1 = new User("test-id-1", "test-username-1");
-    User user2 = new User("test-id-2", "test-username-2");
+    User user1 = new User("test-id-1", "test-username-1", "First Last");
+    User user2 = new User("test-id-2", "test-username-2", "Second Last");
     userService.save(user1);
     userService.save(user2);
 

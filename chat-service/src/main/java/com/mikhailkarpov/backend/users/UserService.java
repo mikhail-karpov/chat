@@ -16,6 +16,11 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
+  @Transactional
+  public boolean existsById(String userId) {
+    return userRepository.existsById(userId);
+  }
+
   @Transactional(readOnly = true)
   @Cacheable(cacheNames = "users", key = "#userId")
   public Optional<User> findById(String userId) {

@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Rollback
 class ConversationServiceTest {
 
-  private final User user1 = new User("user-1", "username-1");
-  private final User user2 = new User("user-2", "username-2");
+  private final User user1 = new User("user-1", "username-1", "User 1");
+  private final User user2 = new User("user-2", "username-2", "User 2");
 
   @Autowired
   private ConversationService conversationService;

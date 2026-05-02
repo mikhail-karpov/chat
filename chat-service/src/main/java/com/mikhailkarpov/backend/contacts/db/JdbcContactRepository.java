@@ -80,7 +80,7 @@ public class JdbcContactRepository implements ContactRepository {
     statuses.forEach(s -> contactStatuses.add(s.name()));
 
     return jdbcClient.sql("""
-        SELECT c.conversation_id, u.id, u.username, c.status
+        SELECT c.conversation_id, u.id, u.username, u.display_name, c.status
         FROM contact c
         JOIN users u
         ON c.contact_user_id = u.id
@@ -92,6 +92,7 @@ public class JdbcContactRepository implements ContactRepository {
             UUID.fromString(rs.getString("conversation_id")),
             rs.getString("id"),
             rs.getString("username"),
+            rs.getString("display_name"),
             ContactStatus.valueOf(rs.getString("status"))
         ))
         .list();

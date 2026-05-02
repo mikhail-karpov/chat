@@ -1,7 +1,7 @@
 import { UserCheck, UserX } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { useApproveContact, useBlockContact } from '@/hooks/useContacts'
 import type { Contact } from '@/types/chat'
+import { UserDisplay } from './UserDisplay'
 
 interface Props {
   contact: Contact
@@ -15,26 +15,7 @@ export function ChatHeader({ contact }: Props) {
 
   return (
     <div className="flex shrink-0 items-center gap-3.5 border-b border-line bg-paper px-8 py-[18px]">
-      {/* Avatar */}
-      <div className="relative flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full border border-line bg-paper-2 font-sans text-[13px] font-medium text-ink-2">
-        {contact.username[0].toUpperCase()}
-        <span
-          className={cn(
-            'absolute -bottom-px -right-px h-2.5 w-2.5 rounded-full border-[1.5px] border-paper',
-            contact.online ? 'bg-online' : 'bg-ink-3',
-          )}
-        />
-      </div>
-
-      {/* Info */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="text-[15px] font-semibold leading-tight tracking-[-0.005em] text-ink">
-          {contact.username}
-        </div>
-        <div className="mt-0.5 flex items-center gap-1.5 font-mono text-[11.5px] text-ink-3">
-          {`@${contact.username}`}
-        </div>
-      </div>
+      <UserDisplay {...contact} />
 
       {/* Actions */}
       <div className="flex items-center gap-2">

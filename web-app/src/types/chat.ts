@@ -4,6 +4,7 @@ export interface Contact {
   id: string
   conversationId: string
   username: string
+  displayName: string
   status: ContactStatus
   unread?: number
   online: boolean
@@ -20,4 +21,5 @@ export interface Message {
 export interface UserSearchResult {
   id: string
   username: string
+  displayName: string
 }

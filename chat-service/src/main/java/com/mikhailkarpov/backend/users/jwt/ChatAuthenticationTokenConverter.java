@@ -17,14 +17,18 @@ public class ChatAuthenticationTokenConverter implements Converter<Jwt, Abstract
   @Override
   public ChatAuthenticationToken convert(Jwt jwt) {
 
-    String userId = jwt.getSubject();
-    String username = jwt.getClaimAsString("preferred_username");
+    var userId = jwt.getSubject();
+    var username = jwt.getClaimAsString("preferred_username");
+    var displayName = jwt.getClaimAsString("name");
 
-    User user = userService.findById(userId).orElseGet(() -> {
-      User newUser = new User(userId, username);
-      userService.save(newUser);
-      return newUser;
-    });
+    var user = userService.findById(userId)
+        .filter(u -> u.username().equals(username))
+        .filter(u -> u.displayName().equals(displayName))
+        .orElse(null);
+
+    if (user == null) {
+      user = userService.save(new User(userId, username, displayName));
+    }
 
     return new ChatAuthenticationToken(jwt, user);
   }
