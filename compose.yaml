@@ -1,5 +1,6 @@
 include:
   - compose.infra.yaml
+  - compose.monitoring.yaml
 
 services:
   web-app:
@@ -9,6 +10,8 @@ services:
     depends_on:
       api-gateway:
         condition: service_healthy
+    labels:
+      - "service.type=application"
     ports:
       - '5173:5173'
 
@@ -32,6 +35,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+    labels:
+      - "service.type=application"
     ports:
       - '8080:8080'
 
@@ -47,6 +52,8 @@ services:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: dev
+    labels:
+      - "service.type=application"
     healthcheck:
       test: [ "CMD", "curl", "-f", "chat-service:8080/actuator/health/liveness" ]
       interval: 5s

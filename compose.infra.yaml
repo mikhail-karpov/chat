@@ -11,6 +11,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 30
+    labels:
+      - "service.type=infrastructure"
     ports:
       - '9090:8080'
       - '9000:9000'
@@ -21,6 +23,7 @@ services:
       - --import-realm
       - --hostname=http://localhost:9090
       - --http-enabled=true
+      - --metrics-enabled=true
 
   postgres:
     image: postgres:17.4-alpine
@@ -34,6 +37,8 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
+    labels:
+      - "service.type=infrastructure"
     shm_size: 128mb
     ports:
       - '5432:5432'
@@ -53,6 +58,8 @@ services:
       timeout: 3s
       retries: 3
       start_period: 5s
+    labels:
+      - "service.type=infrastructure"
     volumes:
       - ./docker/centrifugo/config.json:/centrifugo/config.json
     ports:
@@ -71,6 +78,8 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    labels:
+      - "service.type=infrastructure"
     ports:
       - '6379:6379'
     volumes:

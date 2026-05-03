@@ -23,12 +23,21 @@ centrifugo:
 logging:
   level:
     com.mikhailkarpov: debug
+  pattern:
+    level: "%5p traceId=%X{traceId} spanId=%X{spanId}"
+  structured:
+    format:
+      console: logstash
+    json:
+      exclude: "@version,level_value"
 
 management:
   tracing:
-    sampling.probability: 1.0
-    export:
-      zipkin:
-        enabled: true
-        endpoint: http://zipkin:9411/api/v2/spans
+    sampling:
+      probability: 1.0
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://alloy:4318/v1/traces
 

@@ -6,19 +6,19 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['api-gateway:8080']
-        labels:
-          application: 'API Gateway'
 
   - job_name: 'chat-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: [ 'chat-service:8080' ]
-        labels:
-          application: 'Chat Service'
 
   - job_name: 'centrifugo'
     metrics_path: '/metrics'
     static_configs:
       - targets: [ 'centrifugo:8000' ]
-        labels:
-          application: 'Centrifugo'
+
+  - job_name: 'keycloak'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: [ 'keycloak:9000' ]
+        labels: { application: 'keycloak'}
