@@ -11,5 +11,11 @@ COPY --from=builder /app/extracted/spring-boot-loader/ ./
 COPY --from=builder /app/extracted/snapshot-dependencies/ ./
 COPY --from=builder /app/extracted/application/ ./
 
-ENTRYPOINT java -jar application.jar
+ENV JAVA_OPTS="-XX:ActiveProcessorCount=1 \
+-XX:InitialRAMPercentage=30.0 \
+-XX:MaxRAMPercentage=70.0 \
+-XX:MaxMetaspaceSize=128m \
+-XX:CompressedClassSpaceSize=32m"
+
+ENTRYPOINT exec java ${JAVA_OPTS} -jar application.jar
 EXPOSE 8080
