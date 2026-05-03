@@ -11,6 +11,6 @@ public interface ContactRepository {
 
   Optional<Contact> findContact(String userId, String contactUserId);
 
-  List<ContactView> findContacts(String userId, Iterable<ContactStatus> status);
+  List<Contact> findContacts(String userId, Iterable<ContactStatus> status);
 
 }

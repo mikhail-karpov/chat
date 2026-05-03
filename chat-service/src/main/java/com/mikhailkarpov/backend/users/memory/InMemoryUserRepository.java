@@ -19,13 +19,6 @@ public class InMemoryUserRepository implements UserRepository {
     this.users = users;
   }
 
-
-  @Override
-  public boolean existsById(String userId) {
-
-    return users.containsKey(userId);
-  }
-
   @Override
   public Optional<User> findById(String userId) {
 

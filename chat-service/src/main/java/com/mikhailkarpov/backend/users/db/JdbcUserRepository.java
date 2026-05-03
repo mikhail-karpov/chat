@@ -17,17 +17,6 @@ public class JdbcUserRepository implements UserRepository {
   }
 
   @Override
-  public boolean existsById(String userId) {
-    return jdbcClient.sql("""
-        SELECT username FROM users WHERE id = :id
-        """)
-        .param("id", userId)
-        .query(String.class)
-        .optional()
-        .isPresent();
-  }
-
-  @Override
   public Optional<User> findById(String userId) {
 
     return jdbcClient.sql("""

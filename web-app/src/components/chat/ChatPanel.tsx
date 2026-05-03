@@ -4,7 +4,6 @@ import type { Contact } from '@/types/chat'
 import { useMessages, useSendMessage } from '@/hooks/useMessages'
 import { Composer } from './Composer'
 import { MessageBubble } from './MessageBubble'
-import { ChatHeader } from './ChatHeader'
 
 interface Props {
   contact: Contact
@@ -25,7 +24,6 @@ export function ChatPanel({ contact }: Props) {
 
   return (
     <main className="flex min-w-0 flex-col bg-paper h-full overflow-hidden">
-      <ChatHeader contact={contact} />
       <ScrollArea className="flex-1 min-h-0">
         <div className="flex flex-col gap-2.5 px-6 py-5">
           {messages.map((msg) => (
