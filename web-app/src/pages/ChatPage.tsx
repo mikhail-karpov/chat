@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { ChatPanel } from '@/components/chat/ChatPanel'
+import { DetailsPanel } from '@/components/chat/DetailsPanel'
 import { Sidebar } from '@/components/chat/Sidebar'
 import { useContacts } from '@/hooks/useContacts'
 import { useMessageSubscription } from '@/hooks/useMessageSubscription'
@@ -14,10 +15,13 @@ export function ChatPage() {
   return (
     <div
       className="grid h-screen overflow-hidden border border-line"
-      style={{ gridTemplateColumns: '280px 1fr' }}
+      style={{
+        gridTemplateColumns: activeContact ? '280px 1fr 280px' : '280px 1fr',
+      }}
     >
       <Sidebar />
       {activeContact ? <ChatPanel contact={activeContact} /> : <EmptyPanel />}
+      {activeContact && <DetailsPanel contact={activeContact} />}
     </div>
   )
 }
