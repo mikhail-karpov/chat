@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getMessages, sendMessage } from '../api/messages'
+import { useAuth } from './useAuth'
 import type { Message } from '../types/chat'
 
 export function useMessages(conversationId: string, limit?: number) {
@@ -13,6 +14,7 @@ export function useMessages(conversationId: string, limit?: number) {
 
 export function useSendMessage() {
   const qc = useQueryClient()
+  const { user } = useAuth()
   return useMutation({
     mutationFn: ({ conversationId, text }: { conversationId: string; text: string }) =>
       sendMessage(conversationId, text),
@@ -22,7 +24,7 @@ export function useSendMessage() {
       const optimistic: Message = {
         id: `optimistic-${Date.now()}`,
         conversationId,
-        userId: '',
+        userId: user?.id ?? '',
         text,
         createdAt: new Date(),
       }
