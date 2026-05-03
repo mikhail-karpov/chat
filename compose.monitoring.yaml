@@ -1,32 +1,102 @@
 services:
   prometheus:
-    image: prom/prometheus:v3.2.1
+    image: prom/prometheus:v3.9.1@sha256:1f0f50f06acaceb0f5670d2c8a658a599affe7b0d8e78b898c1035653849a702
     container_name: prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=1d
+      - --web.enable-remote-write-receiver
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://prometheus:9090/-/ready" ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "service.type=instrumentation"
+    ports:
+      - '9091:9090'
     restart: unless-stopped
     volumes:
-      - ./docker/prometheus:/etc/prometheus
-      - prometheus-data:/prometheus
-
-  zipkin:
-    image: openzipkin/zipkin-slim
-    container_name: zipkin
-    ports:
-      - '9411:9411'
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
   grafana:
-    image: grafana/grafana:11.6.0
+    image: grafana/grafana:12.0.2
     container_name: grafana
     depends_on:
-      - prometheus
+      prometheus:
+        condition: service_healthy
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=password
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_AUTH_ANONYMOUS_ENABLED: true
+      GF_AUTH_BASIC_ENABLED: false
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://grafana:3000/api/health" ]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    labels:
+      - "service.type=instrumentation"
     ports:
       - "3000:3000"
     restart: unless-stopped
     volumes:
-      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources
-      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
 
-volumes:
-  prometheus-data: {}
+  loki:
+    image: grafana/loki:3.4.3@sha256:5fe9fa99e9a747297cdf0239a5b25d192d8f668bd6505b09beef4dffcab5aac2
+    container_name: loki
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://loki:3100/ready" ]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    labels:
+      - "service.type=instrumentation"
+
+  tempo:
+    image: grafana/tempo:2.9.0@sha256:65a5789759435f1ef696f1953258b9bbdb18eb571d5ce711ff812d2e128288a4
+    container_name: tempo
+    command: -config.file=/etc/tempo/tempo.yml
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://tempo:3200/ready" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    labels:
+      - "service.type=instrumentation"
+    volumes:
+      - ./docker/tempo/tempo.yml:/etc/tempo/tempo.yml
+
+  alloy:
+    image: grafana/alloy:v1.14.2@sha256:eadfe35ea52b26cbec4d4d780fbcc31edb31108c1c9e537ca59557a5a102c712
+    container_name: alloy
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    depends_on:
+      loki:
+        condition: service_healthy
+      tempo:
+        condition: service_healthy
+    environment:
+      LOKI_ENDPOINT: http://loki:3100/loki/api/v1/push
+      TEMPO_ENDPOINT: http://tempo:4317
+    healthcheck:
+      test: [ "CMD-SHELL", "bash -c '</dev/tcp/localhost/12345' 2>/dev/null" ]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+    labels:
+      - "service.type=instrumentation"
+    ports:
+      - "12345:12345"
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - ./docker/alloy/config.alloy:/etc/alloy/config.alloy
+      - /var/run/docker.sock:/var/run/docker.sock

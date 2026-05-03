@@ -37,6 +37,8 @@ Several test users are preconfigured:
 | annasmith | password |
 | chelsea   | password |
 
+Grafana is available at http://localhost:3000
+
 ```shell
 # Stop containers
 docker compose down -v

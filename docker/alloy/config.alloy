@@ -1,0 +1,55 @@
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+  refresh_interval = "5s"
+}
+
+discovery.relabel "containers" {
+  targets = discovery.docker.containers.targets
+  rule {
+    source_labels = ["__meta_docker_container_label_service_type"]
+    regex = "instrumentation"
+    action = "drop"
+  }
+  rule {
+    target_label = "service_name"
+    source_labels = [
+      "__meta_docker_container_name",
+    ]
+    regex = "/(.*)"
+    replacement = "${1}"
+  }
+}
+
+loki.source.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+  targets = discovery.relabel.containers.output
+  forward_to = [loki.write.local.receiver]
+}
+
+loki.write "local" {
+  endpoint {
+    url = env("LOKI_ENDPOINT")
+  }
+}
+
+otelcol.receiver.otlp "default" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+  http {
+    endpoint = "0.0.0.0:4318"
+  }
+  output {
+    traces = [otelcol.exporter.otlp.tempo.input]
+  }
+}
+
+otelcol.exporter.otlp "tempo" {
+  client {
+    endpoint = env("TEMPO_ENDPOINT")
+    tls {
+      insecure = true
+      insecure_skip_verify = true
+    }
+  }
+}

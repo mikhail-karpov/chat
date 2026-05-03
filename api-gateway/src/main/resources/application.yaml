@@ -97,10 +97,15 @@ management:
       probes:
         enabled: true
   endpoints:
+    access:
+      default: read_only
     web:
       exposure:
         include: health, prometheus
-  tracing:
-    export:
-      zipkin:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  otlp:
+    metrics:
+      export:
         enabled: false
