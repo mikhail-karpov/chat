@@ -6,10 +6,11 @@ interface Props {
 
 export function Composer({ onSend }: Props) {
   const [value, setValue] = useState('')
+  const trimmed = value.trim()
+  const canSend = trimmed.length >= 3 && trimmed.length <= 128
 
   const submit = () => {
-    const trimmed = value.trim()
-    if (!trimmed) return
+    if (!canSend) return
     onSend(trimmed)
     setValue('')
   }
@@ -29,6 +30,7 @@ export function Composer({ onSend }: Props) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKey}
+        maxLength={128}
         placeholder={`enter your message...`}
         className="flex-1 border border-line bg-paper-2 px-3 py-2 font-mono text-[12px] text-ink placeholder:text-ink-3 outline-none focus:border-ink-2"
       />
@@ -36,7 +38,8 @@ export function Composer({ onSend }: Props) {
       {/* Send */}
       <button
         onClick={submit}
-        className="border border-ink bg-ink px-3.5 py-1.5 font-sans text-sm font-medium text-paper transition-opacity hover:opacity-80"
+        disabled={!canSend}
+        className="border border-ink bg-ink px-3.5 py-1.5 font-sans text-sm font-medium text-paper transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         send
       </button>
